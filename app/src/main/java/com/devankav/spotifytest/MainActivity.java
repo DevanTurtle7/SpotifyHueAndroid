@@ -28,6 +28,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ProgressBar;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String CLIENT_ID = "d65cc0ee06034ea6aabec30bd2ec484d";
@@ -85,8 +88,35 @@ public class MainActivity extends AppCompatActivity {
         ProgressBar progressBar3 = findViewById(R.id.progressBar3);
         ProgressBar progressBar4 = findViewById(R.id.progressBar4);
         ProgressBar progressBar5 = findViewById(R.id.progressBar5);
-        ProgressBar[] progressBars = {progressBar1, progressBar2, progressBar3, progressBar4, progressBar5};
+        ProgressBar progressBar6 = findViewById(R.id.progressBar6);
+        ProgressBar progressBar7 = findViewById(R.id.progressBar7);
+        ProgressBar progressBar8 = findViewById(R.id.progressBar8);
+        ProgressBar progressBar9 = findViewById(R.id.progressBar9);
+        ProgressBar progressBar10 = findViewById(R.id.progressBar10);
+        ProgressBar progressBar11 = findViewById(R.id.progressBar11);
+        ProgressBar progressBar12 = findViewById(R.id.progressBar12);
+        ProgressBar progressBar13 = findViewById(R.id.progressBar13);
+        ProgressBar progressBar14 = findViewById(R.id.progressBar14);
+        ProgressBar progressBar15 = findViewById(R.id.progressBar15);
 
+        Map<ProgressBar, Integer> indexes = new HashMap<>();
+        indexes.put(progressBar1, 0);
+        indexes.put(progressBar2, 8);
+        indexes.put(progressBar3, 16);
+        indexes.put(progressBar4, 24);
+        indexes.put(progressBar5, 32);
+        indexes.put(progressBar6, 40);
+        indexes.put(progressBar7, 48);
+        indexes.put(progressBar8, 56);
+        indexes.put(progressBar9, 64);
+        indexes.put(progressBar10, 72);
+        indexes.put(progressBar11, 80);
+        indexes.put(progressBar12, 88);
+        indexes.put(progressBar13, 96);
+        indexes.put(progressBar14, 104);
+        indexes.put(progressBar15, 112);
+
+        ProgressBar[] progressBars = {progressBar1, progressBar2, progressBar3, progressBar4, progressBar5};
 
         Visualizer.OnDataCaptureListener listener = new Visualizer.OnDataCaptureListener() {
             @Override
@@ -117,12 +147,20 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int i) {
+                for (ProgressBar progressBar : indexes.keySet()) {
+                    int index = indexes.get(progressBar);
+                    byte level = bytes[index];
+                    double progress = level + 128;
+                    progress /= 256;
+                    progress *= 100;
 
+                    progressBar.setProgress((int) progress);
+                }
             }
         };
 
         Visualizer visualizer = new Visualizer(0);
-        visualizer.setDataCaptureListener(listener, Visualizer.getMaxCaptureRate(), true, false);
+        visualizer.setDataCaptureListener(listener, Visualizer.getMaxCaptureRate(), false, true);
         visualizer.setCaptureSize(128);
         visualizer.setEnabled(true);
 
