@@ -23,8 +23,10 @@ import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
 import com.spotify.protocol.types.UserStatus;
 
+import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,6 +80,55 @@ public class MainActivity extends AppCompatActivity {
                 });
          **/
 
+        ProgressBar progressBar1 = findViewById(R.id.progressBar1);
+        ProgressBar progressBar2 = findViewById(R.id.progressBar2);
+        ProgressBar progressBar3 = findViewById(R.id.progressBar3);
+        ProgressBar progressBar4 = findViewById(R.id.progressBar4);
+        ProgressBar progressBar5 = findViewById(R.id.progressBar5);
+        ProgressBar[] progressBars = {progressBar1, progressBar2, progressBar3, progressBar4, progressBar5};
+
+
+        Visualizer.OnDataCaptureListener listener = new Visualizer.OnDataCaptureListener() {
+            @Override
+            public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int i) {
+                for (int x = 0; x < progressBars.length; x++) {
+                    ProgressBar current = progressBars[x];
+                    int to = (25 * (x + 1));
+                    int from = (25 * x);
+                    int diff = to - from;
+                    int sum = 0;
+
+                    Log.d("MainActivity", "To: " + to + " From : " + from);
+
+                    for (int k = from; k < to; k++) {
+                        sum += bytes[k];
+                    }
+
+                    double level = sum / diff;
+
+                    double progress = level + 128;
+                    progress /= 256;
+                    progress *= 100;
+
+                    current.setProgress((int) progress);
+                    Log.d("MainActivity", progress + "");
+                }
+            }
+
+            @Override
+            public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int i) {
+
+            }
+        };
+
+        Visualizer visualizer = new Visualizer(0);
+        visualizer.setDataCaptureListener(listener, Visualizer.getMaxCaptureRate(), true, false);
+        visualizer.setCaptureSize(128);
+        visualizer.setEnabled(true);
+
+        Log.d("MainActivity", visualizer.getCaptureSizeRange()[0] + " " + visualizer.getCaptureSizeRange()[1]);
+
+/*
         ContentApi contentApi = mSpotifyAppRemote.getContentApi();
         CallResult<ListItems> result = contentApi.getRecommendedContentItems(ContentApi.ContentType.DEFAULT).setResultCallback((e) -> {
             Log.d("MainActivity","hello");
@@ -92,6 +143,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("MainActivity", item.title);
             }
         });
+        */
+
     }
 
     @Override
