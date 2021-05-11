@@ -2,13 +2,26 @@ package com.devankav.spotifytest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
+import com.spotify.android.appremote.api.ContentApi;
+import com.spotify.android.appremote.api.PlayerApi;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 
+import com.spotify.android.appremote.api.UserApi;
+import com.spotify.protocol.client.CallResult;
 import com.spotify.protocol.client.Subscription;
+import com.spotify.protocol.types.Capabilities;
+import com.spotify.protocol.types.Empty;
+import com.spotify.protocol.types.Item;
+import com.spotify.protocol.types.LibraryState;
+import com.spotify.protocol.types.ListItem;
+import com.spotify.protocol.types.ListItems;
 import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
+import com.spotify.protocol.types.UserStatus;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -52,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void connected() {
+        /**
         mSpotifyAppRemote.getPlayerApi().play("spotify:playlist:2kKTWsGxXYt0DXBXQkHejx");
 
         mSpotifyAppRemote.getPlayerApi()
@@ -62,6 +76,22 @@ public class MainActivity extends AppCompatActivity {
                        Log.d("MainActivity", track.name + " by " + track.artist.name);
                    }
                 });
+         **/
+
+        ContentApi contentApi = mSpotifyAppRemote.getContentApi();
+        CallResult<ListItems> result = contentApi.getRecommendedContentItems(ContentApi.ContentType.DEFAULT).setResultCallback((e) -> {
+            Log.d("MainActivity","hello");
+
+            for (ListItem item : e.items) {
+                contentApi.getChildrenOfItem(item, 100, 0).setResultCallback((t) -> {
+                    for (ListItem x : t.items) {
+                        Log.d("MainActivity", item.title + ": " + x.title);
+                    }
+                });
+
+                Log.d("MainActivity", item.title);
+            }
+        });
     }
 
     @Override
