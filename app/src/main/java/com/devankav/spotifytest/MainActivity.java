@@ -4,34 +4,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.palette.graphics.Palette;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.spotify.android.appremote.api.AppRemote;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
-import com.spotify.protocol.types.Image;
 import com.spotify.protocol.types.ImageUri;
+import com.spotify.protocol.types.PlayerState;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,10 +29,14 @@ public class MainActivity extends AppCompatActivity {
 
     private SpotifyAppRemote appRemote;
 
+    private Palette albumArtPalette;
+    private Object paletteLock = new Object();
+    private Thread colorUpdater = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startService(new Intent(this, LightSync.class));
+        startService(new Intent(this, LightSync.class)); // Start the background service
 
         setContentView(R.layout.activity_main);
     }
@@ -53,18 +45,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        // Setup the connection parameters for the spotify remote
         ConnectionParams connectionParams = new ConnectionParams
                 .Builder(CLIENT_ID)
                 .setRedirectUri(REDIRECT_URI)
                 .showAuthView(true)
                 .build();
 
+        // Connect to the Spotify remote
         SpotifyAppRemote.connect(this, connectionParams, new Connector.ConnectionListener() {
             @Override
             public void onConnected(SpotifyAppRemote spotifyAppRemote) {
-                appRemote = spotifyAppRemote;
-                Log.d("MainActivity", "Connected! Yay!");
-
+                appRemote = spotifyAppRemote; // Get the app remote
                 connected();
             }
 
@@ -76,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void connected() {
+        /*
         GlobalRequestQueue queue = new GlobalRequestQueue(getApplicationContext());
 
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
@@ -101,47 +94,93 @@ public class MainActivity extends AppCompatActivity {
         String url = "https://discovery.meethue.com";
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, listener, errorListener);
         queue.getRequestQueue().add(jsonArrayRequest);
+         */
 
-        appRemote.getPlayerApi().subscribeToPlayerState().setEventCallback((playerState) -> {
-            Log.d("MainActivity", "Updated");
+        appRemote.getPlayerApi().subscribeToPlayerState().setEventCallback(this::playerEventCallback); // Subscribe to the player state
 
-            ImageView albumArtView = findViewById(R.id.albumArt);
-            ImageUri imageUri = playerState.track.imageUri;
-            String[] tokens = imageUri.toString().split(":");
-            String endingCode = tokens[tokens.length - 1];
-            tokens = endingCode.split("'");
-            String imageCode = tokens[0];
-
-            String albumArtURL = IMAGE_PREFIX + imageCode;
-            Picasso.get().load(albumArtURL).into(albumArtView);
-
-            Picasso.get().load(albumArtURL).into(new Target() {
+        if (colorUpdater == null) {
+            colorUpdater = new Thread(new Runnable() {
                 @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    Palette palette = Palette.from(bitmap).generate();
-                    Log.d("MainActivity", "2");
-                    ConstraintLayout layout = findViewById(R.id.mainConstraintLayout);
-                    Log.d("MainActivity", "3");
-                    layout.setBackgroundColor(palette.getVibrantColor(0));
+                public void run() {
+                    while (true) {
+                        synchronized (paletteLock) {
+                            try {
+                                Log.d("MainActivity", "Waiting");
+                                paletteLock.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
 
-                }
+                        Palette palette = getAlbumArtPalette();
 
-                @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                }
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
+                        Log.d("MainActivity", "Updating color");
+                        ConstraintLayout constraintLayout = findViewById(R.id.mainConstraintLayout);
+                        constraintLayout.setBackgroundColor(palette.getVibrantColor(0));
+                    }
                 }
             });
-        });
+
+            colorUpdater.start();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         SpotifyAppRemote.disconnect(appRemote);
+    }
+
+    public Palette getAlbumArtPalette() {
+        return albumArtPalette;
+    }
+
+    private String getImageURL(PlayerState playerState) {
+        ImageUri imageUri = playerState.track.imageUri; // Get the image uri from the player state
+        String[] tokens = imageUri.toString().split(":"); // Split the uri on colons
+        String endingCode = tokens[tokens.length - 1]; // Get the last token
+        tokens = endingCode.split("'"); // Strip the end of the uri off
+        String imageCode = tokens[0];
+        String url = IMAGE_PREFIX + imageCode; // Assemble the url
+
+        return url;
+    }
+
+    public void updatePalette(String url) {
+        Picasso.get().load(url).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                Palette palette = Palette.from(bitmap).generate();
+                albumArtPalette = palette;
+
+                synchronized (paletteLock) {
+                    paletteLock.notifyAll();
+                }
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        });
+    }
+
+    private void updateAlbumArt(PlayerState playerState) {
+        ImageView albumArtView = findViewById(R.id.albumArt); // Get the ImageView
+        String url = getImageURL(playerState); // Get the image url
+
+        Picasso.get().load(url).into(albumArtView); // Update the image image view
+    }
+
+    private void playerEventCallback(PlayerState playerState) {
+        updateAlbumArt(playerState);
+
+        String url = getImageURL(playerState);
+        updatePalette(url);
     }
 }
