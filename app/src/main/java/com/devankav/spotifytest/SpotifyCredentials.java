@@ -1,3 +1,9 @@
+/**
+ * A class that contains Spotify credentials
+ *
+ * @author Devan Kavalchek
+ */
+
 package com.devankav.spotifytest;
 
 public class SpotifyCredentials {
