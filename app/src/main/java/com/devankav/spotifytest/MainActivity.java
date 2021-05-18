@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.spotify.android.appremote.api.ConnectionParams;
@@ -37,8 +38,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ProgressBar;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,10 +98,16 @@ public class MainActivity extends AppCompatActivity {
 
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
 
-        Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+        Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
             @Override
-            public void onResponse(JSONObject response) {
-                Log.d("MainActivity", "Response: " + response.toString());
+            public void onResponse(JSONArray response) {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        Log.d("MainActivity", response.getJSONObject(i).toString());
+                    } catch (JSONException e) {
+                        Log.e("MainActivity", "Caught JSON exception: " + e.getMessage());
+                    }
+                }
             }
         };
 
@@ -109,10 +119,10 @@ public class MainActivity extends AppCompatActivity {
         };
 
         String url = "https://discovery.meethue.com";
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, listener, errorListener);
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, listener, errorListener);
 
         Log.d("MainActivity", "Making Request");
-        queue.add(jsonObjectRequest);
+        queue.add(jsonArrayRequest);
     }
 
     @Override
