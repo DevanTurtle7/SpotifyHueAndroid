@@ -1,3 +1,7 @@
+/**
+ * @author Devan Kavalchek
+ */
+
 package com.devankav.spotifytest;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Runs when the spotify remote is successfully connected to
+     */
     private void connected() {
         /*
         GlobalRequestQueue queue = new GlobalRequestQueue(getApplicationContext());
@@ -98,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         appRemote.getPlayerApi().subscribeToPlayerState().setEventCallback(this::playerEventCallback); // Subscribe to the player state
 
-        if (colorUpdater == null) {
+        if (colorUpdater == null) { // Make sure there is not already a thread running
             colorUpdater = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -131,6 +138,10 @@ public class MainActivity extends AppCompatActivity {
         SpotifyAppRemote.disconnect(appRemote);
     }
 
+    /**
+     * An accessor for the album art color palette
+     * @return A color palette based on the album art of the current song
+     */
     public Palette getAlbumArtPalette() {
         return albumArtPalette;
     }
@@ -146,15 +157,19 @@ public class MainActivity extends AppCompatActivity {
         return url;
     }
 
+    /**
+     * Updates the album art palette
+     * @param url The url of the album art image
+     */
     public void updatePalette(String url) {
-        Picasso.get().load(url).into(new Target() {
+        Picasso.get().load(url).into(new Target() { // Load the bitmap of the image
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                Palette palette = Palette.from(bitmap).generate();
-                albumArtPalette = palette;
+                Palette palette = Palette.from(bitmap).generate(); // Generate a palette from the bitmap
+                albumArtPalette = palette; // Update the palette object
 
                 synchronized (paletteLock) {
-                    paletteLock.notifyAll();
+                    paletteLock.notifyAll(); // Notify the color updater threads that there was an update
                 }
             }
 
@@ -170,6 +185,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Updates the album art display on the main page
+     * @param playerState The player state passed in from event updates
+     */
     private void updateAlbumArt(PlayerState playerState) {
         ImageView albumArtView = findViewById(R.id.albumArt); // Get the ImageView
         String url = getImageURL(playerState); // Get the image url
@@ -177,10 +196,14 @@ public class MainActivity extends AppCompatActivity {
         Picasso.get().load(url).into(albumArtView); // Update the image image view
     }
 
+    /**
+     * The callback for a player event
+     * @param playerState The state of player
+     */
     private void playerEventCallback(PlayerState playerState) {
-        updateAlbumArt(playerState);
+        updateAlbumArt(playerState); // Update the album art
 
         String url = getImageURL(playerState);
-        updatePalette(url);
+        updatePalette(url); // Update the palette
     }
 }
