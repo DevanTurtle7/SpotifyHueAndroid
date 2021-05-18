@@ -18,11 +18,9 @@ import com.squareup.picasso.Target;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
@@ -129,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 Palette palette = Palette.from(bitmap).generate(); // Generate a palette from the bitmap
 
+                // Update views with color
                 ConstraintLayout constraintLayout = findViewById(R.id.mainConstraintLayout);
                 constraintLayout.setBackgroundColor(palette.getVibrantColor(0));
             }
