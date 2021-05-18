@@ -1,6 +1,8 @@
 package com.devankav.spotifytest;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.palette.graphics.Palette;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -13,10 +15,12 @@ import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.types.Image;
 import com.spotify.protocol.types.ImageUri;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -110,6 +114,28 @@ public class MainActivity extends AppCompatActivity {
 
             String albumArtURL = IMAGE_PREFIX + imageCode;
             Picasso.get().load(albumArtURL).into(albumArtView);
+
+            Picasso.get().load(albumArtURL).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    Palette palette = Palette.from(bitmap).generate();
+                    Log.d("MainActivity", "2");
+                    ConstraintLayout layout = findViewById(R.id.mainConstraintLayout);
+                    Log.d("MainActivity", "3");
+                    layout.setBackgroundColor(palette.getVibrantColor(0));
+
+                }
+
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                }
+            });
         });
     }
 
