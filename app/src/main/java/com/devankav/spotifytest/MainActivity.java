@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Setup the connection parameters for the spotify remote
         ConnectionParams connectionParams = new ConnectionParams
-                .Builder(CLIENT_ID)
-                .setRedirectUri(REDIRECT_URI)
+                .Builder(SpotifyCredentials.CLIENT_ID)
+                .setRedirectUri(SpotifyCredentials.REDIRECT_URI)
                 .showAuthView(true)
                 .build();
 

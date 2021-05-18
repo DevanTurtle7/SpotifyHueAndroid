@@ -21,8 +21,6 @@ import com.spotify.protocol.types.PlayerState;
 
 public class LightSync extends Service {
 
-    private static final String CLIENT_ID = "d65cc0ee06034ea6aabec30bd2ec484d";
-    private static final String REDIRECT_URI = "https://devanturtle7.github.io/SpotifyRedirect/";
     private SpotifyAppRemote appRemote;
 
     /**
@@ -45,8 +43,8 @@ public class LightSync extends Service {
 
         // Setup the connection parameters for the spotify remote
         ConnectionParams connectionParams = new ConnectionParams
-                .Builder(CLIENT_ID)
-                .setRedirectUri(REDIRECT_URI)
+                .Builder(SpotifyCredentials.CLIENT_ID)
+                .setRedirectUri(SpotifyCredentials.REDIRECT_URI)
                 .showAuthView(true)
                 .build();
 
