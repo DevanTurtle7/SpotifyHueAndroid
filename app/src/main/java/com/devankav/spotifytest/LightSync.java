@@ -33,24 +33,21 @@ public class LightSync extends Service {
                 .build();
 
         SpotifyAppRemote.connect(this, connectionParams, new Connector.ConnectionListener() {
-                    @Override
-                    public void onConnected(SpotifyAppRemote spotifyAppRemote) {
-                        appRemote = spotifyAppRemote;
-                        appRemote.getPlayerApi().subscribeToPlayerState().setEventCallback((playerState -> {
-                            Log.d("LightSync", playerState.track.toString());
-                        }));
-                        Log.d("LightSync", "Connected! Yay!");
-                    }
+            @Override
+            public void onConnected(SpotifyAppRemote spotifyAppRemote) {
+                appRemote = spotifyAppRemote;
+                appRemote.getPlayerApi().subscribeToPlayerState().setEventCallback((playerState -> {
+                    Log.d("LightSync", playerState.track.name + " by " + playerState.track.artist.name);
+                }));
+                Log.d("LightSync", "Connected! Yay!");
+            }
 
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        Log.e("LightSync", throwable.getMessage(), throwable);
-                    }
-                });
+            @Override
+            public void onFailure(Throwable throwable) {
+                Log.e("LightSync", throwable.getMessage(), throwable);
+            }
+        });
 
-
-
-        //Log.d("LightSync", "Hello");
         return super.onStartCommand(intent, flags, startId);
     }
 }
