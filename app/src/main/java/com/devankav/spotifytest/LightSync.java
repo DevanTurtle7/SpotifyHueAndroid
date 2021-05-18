@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
@@ -21,6 +22,7 @@ public class LightSync extends Service {
 
     public void playerStateUpdated(PlayerState playerState) {
         Log.d("LightSync", playerState.track.name + " by " + playerState.track.artist.name);
+        Log.d("LightSync", playerState.track.toString());
     }
 
     @Nullable
