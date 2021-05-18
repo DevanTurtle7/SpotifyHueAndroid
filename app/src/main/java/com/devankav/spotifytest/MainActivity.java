@@ -92,10 +92,7 @@ public class MainActivity extends AppCompatActivity {
                    }
                 });
 
-
-        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
-        Network network = new BasicNetwork(new HurlStack());
-        RequestQueue queue = new RequestQueue(cache, network);
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
 
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
