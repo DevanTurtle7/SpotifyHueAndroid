@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                    }
                 });
 
-        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        GlobalRequestQueue queue = new GlobalRequestQueue(getApplicationContext());
 
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
             @Override
@@ -120,9 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
         String url = "https://discovery.meethue.com";
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, listener, errorListener);
-
-        Log.d("MainActivity", "Making Request");
-        queue.add(jsonArrayRequest);
+        queue.getRequestQueue().add(jsonArrayRequest);
     }
 
     @Override
