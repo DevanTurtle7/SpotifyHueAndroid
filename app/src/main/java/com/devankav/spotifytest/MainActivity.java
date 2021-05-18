@@ -2,7 +2,16 @@ package com.devankav.spotifytest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Cache;
+import com.android.volley.Network;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
@@ -27,6 +36,8 @@ import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ProgressBar;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,8 +81,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void connected() {
-        /**
-        mSpotifyAppRemote.getPlayerApi().play("spotify:playlist:2kKTWsGxXYt0DXBXQkHejx");
+        //mSpotifyAppRemote.getPlayerApi().play("spotify:playlist:2kKTWsGxXYt0DXBXQkHejx");
 
         mSpotifyAppRemote.getPlayerApi()
                 .subscribeToPlayerState()
@@ -81,108 +91,30 @@ public class MainActivity extends AppCompatActivity {
                        Log.d("MainActivity", track.name + " by " + track.artist.name);
                    }
                 });
-         **/
 
-        ProgressBar progressBar1 = findViewById(R.id.progressBar1);
-        ProgressBar progressBar2 = findViewById(R.id.progressBar2);
-        ProgressBar progressBar3 = findViewById(R.id.progressBar3);
-        ProgressBar progressBar4 = findViewById(R.id.progressBar4);
-        ProgressBar progressBar5 = findViewById(R.id.progressBar5);
-        ProgressBar progressBar6 = findViewById(R.id.progressBar6);
-        ProgressBar progressBar7 = findViewById(R.id.progressBar7);
-        ProgressBar progressBar8 = findViewById(R.id.progressBar8);
-        ProgressBar progressBar9 = findViewById(R.id.progressBar9);
-        ProgressBar progressBar10 = findViewById(R.id.progressBar10);
-        ProgressBar progressBar11 = findViewById(R.id.progressBar11);
-        ProgressBar progressBar12 = findViewById(R.id.progressBar12);
-        ProgressBar progressBar13 = findViewById(R.id.progressBar13);
-        ProgressBar progressBar14 = findViewById(R.id.progressBar14);
-        ProgressBar progressBar15 = findViewById(R.id.progressBar15);
 
-        Map<ProgressBar, Integer> indexes = new HashMap<>();
-        indexes.put(progressBar1, 0);
-        indexes.put(progressBar2, 8);
-        indexes.put(progressBar3, 16);
-        indexes.put(progressBar4, 24);
-        indexes.put(progressBar5, 32);
-        indexes.put(progressBar6, 40);
-        indexes.put(progressBar7, 48);
-        indexes.put(progressBar8, 56);
-        indexes.put(progressBar9, 64);
-        indexes.put(progressBar10, 72);
-        indexes.put(progressBar11, 80);
-        indexes.put(progressBar12, 88);
-        indexes.put(progressBar13, 96);
-        indexes.put(progressBar14, 104);
-        indexes.put(progressBar15, 112);
+        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
+        Network network = new BasicNetwork(new HurlStack());
+        RequestQueue queue = new RequestQueue(cache, network);
 
-        ProgressBar[] progressBars = {progressBar1, progressBar2, progressBar3, progressBar4, progressBar5};
-
-        Visualizer.OnDataCaptureListener listener = new Visualizer.OnDataCaptureListener() {
+        Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
-            public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int i) {
-                for (int x = 0; x < progressBars.length; x++) {
-                    ProgressBar current = progressBars[x];
-                    int to = (25 * (x + 1));
-                    int from = (25 * x);
-                    int diff = to - from;
-                    int sum = 0;
-
-                    Log.d("MainActivity", "To: " + to + " From : " + from);
-
-                    for (int k = from; k < to; k++) {
-                        sum += bytes[k];
-                    }
-
-                    double level = sum / diff;
-
-                    double progress = level + 128;
-                    progress /= 256;
-                    progress *= 100;
-
-                    current.setProgress((int) progress);
-                    Log.d("MainActivity", progress + "");
-                }
-            }
-
-            @Override
-            public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int i) {
-                for (ProgressBar progressBar : indexes.keySet()) {
-                    int index = indexes.get(progressBar);
-                    byte level = bytes[index];
-                    double progress = level + 128;
-                    progress /= 256;
-                    progress *= 100;
-
-                    progressBar.setProgress((int) progress);
-                }
+            public void onResponse(JSONObject response) {
+                Log.d("MainActivity", "Response: " + response.toString());
             }
         };
 
-        Visualizer visualizer = new Visualizer(0);
-        visualizer.setDataCaptureListener(listener, Visualizer.getMaxCaptureRate(), false, true);
-        visualizer.setCaptureSize(128);
-        visualizer.setEnabled(true);
-
-        Log.d("MainActivity", visualizer.getCaptureSizeRange()[0] + " " + visualizer.getCaptureSizeRange()[1]);
-
-/*
-        ContentApi contentApi = mSpotifyAppRemote.getContentApi();
-        CallResult<ListItems> result = contentApi.getRecommendedContentItems(ContentApi.ContentType.DEFAULT).setResultCallback((e) -> {
-            Log.d("MainActivity","hello");
-
-            for (ListItem item : e.items) {
-                contentApi.getChildrenOfItem(item, 100, 0).setResultCallback((t) -> {
-                    for (ListItem x : t.items) {
-                        Log.d("MainActivity", item.title + ": " + x.title);
-                    }
-                });
-
-                Log.d("MainActivity", item.title);
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("MainActivity", error.getMessage());
             }
-        });
-        */
+        };
 
+        String url = "https://discovery.meethue.com";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, listener, errorListener);
+
+        queue.add(jsonObjectRequest);
     }
 
     @Override
