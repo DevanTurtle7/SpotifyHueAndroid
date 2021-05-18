@@ -18,9 +18,11 @@ import com.squareup.picasso.Target;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
@@ -118,18 +120,57 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Gets the most vibrant color from a given palette
+     * @param palette The palette being searched
+     * @return The most vibrant color in the palette
+     */
+    public int getColor(Palette palette) {
+        int color = palette.getVibrantColor(0);
+
+        if (color == 0) {
+            color = palette.getLightVibrantColor(0);
+        }
+        if (color == 0) {
+            color = palette.getDarkVibrantColor(0);
+        }
+        if (color == 0) {
+            color = palette.getDominantColor(0);
+        }
+
+        return color;
+    }
+
+    /**
      * Updates the album art palette
      * @param url The url of the album art image
      */
-    public void updatePalette(String url) {
+    private void updatePalette(String url) {
         Picasso.get().load(url).into(new Target() { // Load the bitmap of the image
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 Palette palette = Palette.from(bitmap).generate(); // Generate a palette from the bitmap
 
                 // Update views with color
+                View vibrant = findViewById(R.id.vibrant);
+                View vibrantDark = findViewById(R.id.vibrantDark);
+                View vibrantLight = findViewById(R.id.vibrantLight);
+                View muted = findViewById(R.id.muted);
+                View mutedDark = findViewById(R.id.mutedDark);
+                View mutedLight = findViewById(R.id.mutedLight);
+                View dominant = findViewById(R.id.dominant);
+
+                vibrant.setBackgroundColor(palette.getVibrantColor(0));
+                vibrantDark.setBackgroundColor(palette.getDarkVibrantColor(0));
+                vibrantLight.setBackgroundColor(palette.getLightVibrantColor(0));
+                muted.setBackgroundColor(palette.getMutedColor(0));
+                mutedDark.setBackgroundColor(palette.getDarkMutedColor(0));
+                mutedLight.setBackgroundColor(palette.getLightMutedColor(0));
+                dominant.setBackgroundColor(palette.getDominantColor(0));
+
+                int color = getColor(palette);
+
                 ConstraintLayout constraintLayout = findViewById(R.id.mainConstraintLayout);
-                constraintLayout.setBackgroundColor(palette.getVibrantColor(0));
+                constraintLayout.setBackgroundColor(color);
             }
 
             @Override

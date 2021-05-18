@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/mainConstraintLayout"
     tools:context=".MainActivity">
 
     <ImageView
@@ -14,6 +14,86 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <View
+            android:id="@+id/vibrant"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@id/vibrantDark"
+            app:layout_constraintTop_toTopOf="parent"
+            android:elevation="2dp"/>
+
+        <View
+            android:id="@+id/vibrantDark"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/vibrant"
+            app:layout_constraintRight_toRightOf="@id/vibrantLight"
+            app:layout_constraintTop_toTopOf="parent"
+            android:elevation="2dp"/>
+
+        <View
+            android:id="@+id/vibrantLight"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/vibrantDark"
+            app:layout_constraintRight_toRightOf="@id/muted"
+            app:layout_constraintTop_toTopOf="parent"
+            android:elevation="2dp"/>
+
+        <View
+            android:id="@+id/muted"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/vibrantLight"
+            app:layout_constraintRight_toRightOf="@id/mutedDark"
+            app:layout_constraintTop_toTopOf="parent"
+            android:elevation="2dp"/>
+
+        <View
+            android:id="@+id/mutedDark"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/muted"
+            app:layout_constraintRight_toRightOf="@id/mutedLight"
+            app:layout_constraintTop_toTopOf="parent"
+            android:elevation="2dp"/>
+
+        <View
+            android:id="@+id/mutedLight"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/mutedDark"
+            app:layout_constraintRight_toRightOf="@id/dominant"
+            app:layout_constraintTop_toTopOf="parent"
+            android:elevation="2dp"/>
+
+        <View
+            android:id="@+id/dominant"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/mutedLight"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:elevation="2dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
