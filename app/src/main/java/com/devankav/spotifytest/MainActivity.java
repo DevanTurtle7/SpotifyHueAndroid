@@ -33,10 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
     private SpotifyAppRemote appRemote;
 
-    private Palette albumArtPalette;
-    private Object paletteLock = new Object();
-    private Thread colorUpdater = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,46 +100,12 @@ public class MainActivity extends AppCompatActivity {
          */
 
         appRemote.getPlayerApi().subscribeToPlayerState().setEventCallback(this::playerEventCallback); // Subscribe to the player state
-
-        if (colorUpdater == null) { // Make sure there is not already a thread running
-            colorUpdater = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (true) {
-                        synchronized (paletteLock) {
-                            try {
-                                Log.d("MainActivity", "Waiting");
-                                paletteLock.wait();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        Palette palette = getAlbumArtPalette();
-
-                        Log.d("MainActivity", "Updating color");
-                        ConstraintLayout constraintLayout = findViewById(R.id.mainConstraintLayout);
-                        constraintLayout.setBackgroundColor(palette.getVibrantColor(0));
-                    }
-                }
-            });
-
-            colorUpdater.start();
-        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         SpotifyAppRemote.disconnect(appRemote);
-    }
-
-    /**
-     * An accessor for the album art color palette
-     * @return A color palette based on the album art of the current song
-     */
-    public Palette getAlbumArtPalette() {
-        return albumArtPalette;
     }
 
     private String getImageURL(PlayerState playerState) {
@@ -166,11 +128,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 Palette palette = Palette.from(bitmap).generate(); // Generate a palette from the bitmap
-                albumArtPalette = palette; // Update the palette object
 
-                synchronized (paletteLock) {
-                    paletteLock.notifyAll(); // Notify the color updater threads that there was an update
-                }
+                ConstraintLayout constraintLayout = findViewById(R.id.mainConstraintLayout);
+                constraintLayout.setBackgroundColor(palette.getVibrantColor(0));
             }
 
             @Override
