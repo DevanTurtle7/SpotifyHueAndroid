@@ -11,12 +11,17 @@ import com.spotify.android.appremote.api.AppRemote;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
+import com.spotify.protocol.types.PlayerState;
 
 public class LightSync extends Service {
 
     private static final String CLIENT_ID = "d65cc0ee06034ea6aabec30bd2ec484d";
     private static final String REDIRECT_URI = "https://devanturtle7.github.io/SpotifyRedirect/";
     private SpotifyAppRemote appRemote;
+
+    public void playerStateUpdated(PlayerState playerState) {
+        Log.d("LightSync", playerState.track.name + " by " + playerState.track.artist.name);
+    }
 
     @Nullable
     @Override
@@ -36,9 +41,7 @@ public class LightSync extends Service {
             @Override
             public void onConnected(SpotifyAppRemote spotifyAppRemote) {
                 appRemote = spotifyAppRemote;
-                appRemote.getPlayerApi().subscribeToPlayerState().setEventCallback((playerState -> {
-                    Log.d("LightSync", playerState.track.name + " by " + playerState.track.artist.name);
-                }));
+                appRemote.getPlayerApi().subscribeToPlayerState().setEventCallback(LightSync.this::playerStateUpdated);
                 Log.d("LightSync", "Connected! Yay!");
             }
 
