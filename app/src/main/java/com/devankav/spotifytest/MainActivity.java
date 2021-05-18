@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         String url = "https://discovery.meethue.com";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, listener, errorListener);
 
+        Log.d("MainActivity", "Making Request");
         queue.add(jsonObjectRequest);
     }
 
