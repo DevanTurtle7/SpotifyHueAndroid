@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         queue.getRequestQueue().add(jsonArrayRequest);
          */
 
-        appRemote.getPlayerApi().subscribeToPlayerState().setEventCallback(this::playerEventCallback); // Subscribe to the player state
+        appRemote.getPlayerApi().subscribeToPlayerState().setEventCallback(this::playerStateUpdated); // Subscribe to the player state
     }
 
     @Override
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
      * The callback for a player event
      * @param playerState The state of player
      */
-    private void playerEventCallback(PlayerState playerState) {
+    private void playerStateUpdated(PlayerState playerState) {
         updateAlbumArt(playerState); // Update the album art
 
         String url = getImageURL(playerState);

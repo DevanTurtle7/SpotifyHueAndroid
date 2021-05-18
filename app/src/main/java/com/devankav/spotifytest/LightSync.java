@@ -1,14 +1,19 @@
+/**
+ * A service that runs in the background, even when the app is closed. Listens to Spotify events
+ * and updates Philips Hue lights accordingly.
+ *
+ * @author Devan Kavalchek
+ */
+
 package com.devankav.spotifytest;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
-import com.spotify.android.appremote.api.AppRemote;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
@@ -20,6 +25,10 @@ public class LightSync extends Service {
     private static final String REDIRECT_URI = "https://devanturtle7.github.io/SpotifyRedirect/";
     private SpotifyAppRemote appRemote;
 
+    /**
+     * A callback for when there was a player event
+     * @param playerState
+     */
     public void playerStateUpdated(PlayerState playerState) {
         Log.d("LightSync", playerState.track.name + " by " + playerState.track.artist.name);
         Log.d("LightSync", playerState.track.toString());
@@ -33,6 +42,8 @@ public class LightSync extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        // Setup the connection parameters for the spotify remote
         ConnectionParams connectionParams = new ConnectionParams
                 .Builder(CLIENT_ID)
                 .setRedirectUri(REDIRECT_URI)
