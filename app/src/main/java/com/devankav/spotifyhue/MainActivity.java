@@ -24,6 +24,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import java.util.Arrays;
@@ -42,6 +43,15 @@ public class MainActivity extends AppCompatActivity {
         startService(new Intent(this, LightSync.class)); // Start the background service
 
         setContentView(R.layout.activity_main);
+
+        Button switchButton = findViewById(R.id.switchButton);
+        switchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ConnectActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
