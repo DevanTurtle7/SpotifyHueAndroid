@@ -1,4 +1,4 @@
-package com.devankav.spotifytest;
+package com.devankav.spotifyhueandroid;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.devankav.spotifytest;
+package com.devankav.spotifyhueandroid;
 
 import android.content.Context;
 

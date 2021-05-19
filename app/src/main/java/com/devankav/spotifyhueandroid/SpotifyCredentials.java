@@ -4,7 +4,7 @@
  * @author Devan Kavalchek
  */
 
-package com.devankav.spotifytest;
+package com.devankav.spotifyhueandroid;
 
 public class SpotifyCredentials {
     public static final String CLIENT_ID = "d65cc0ee06034ea6aabec30bd2ec484d";
