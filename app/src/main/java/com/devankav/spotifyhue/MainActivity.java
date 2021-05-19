@@ -2,7 +2,7 @@
  * @author Devan Kavalchek
  */
 
-package com.devankav.spotifyhueandroid;
+package com.devankav.spotifyhue;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;

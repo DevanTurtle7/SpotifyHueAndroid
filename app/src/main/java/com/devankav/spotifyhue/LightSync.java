@@ -5,7 +5,7 @@
  * @author Devan Kavalchek
  */
 
-package com.devankav.spotifyhueandroid;
+package com.devankav.spotifyhue;
 
 import android.app.Service;
 import android.content.Intent;

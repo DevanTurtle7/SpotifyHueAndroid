@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.devankav.spotifyhueandroid">
+    package="com.devankav.spotifyhue">
 
     <!--
     <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service android:name=".LightSync"/>
+        <service android:name="com.devankav.spotifyhue.LightSync"/>
 
 
         <activity android:name=".MainActivity">
