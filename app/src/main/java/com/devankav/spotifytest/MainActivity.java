@@ -143,45 +143,6 @@ public class MainActivity extends AppCompatActivity {
         return color;
     }
 
-    public double[] rgbToXY(int color) {
-        int _R = (color >> 16) & 0xff;
-        int _G = (color >> 8) & 0xff;
-        int _B = (color) & 0xff;
-
-        float R = _R / 255f;
-        float G = _G / 255f;
-        float B = _B / 255f;
-
-        if (R > 0.04045) {
-            R = (float) Math.pow((R + 0.055) / (1.0 + 0.055), 2.4);
-        } else {
-            R = (float) (R / 12.92);
-        }
-
-        if (G > 0.04045) {
-            G = (float) Math.pow((G + 0.055) / (1.0 + 0.055), 2.4);
-        } else {
-            G = (float) (G / 12.92);
-        }
-
-        if (B > 0.04045) {
-            B = (float) Math.pow((B + 0.055) / (1.0 + 0.055), 2.4);
-        } else {
-            B = (float) (B / 12.92);
-        }
-
-        double X = R * 0.664511 + G * 0.154324 + B * 0.162028;
-        double Y = R * 0.283881 + G * 0.668433 + B * 0.047685;
-        double Z = R * 0.000088 + G * 0.072310 + B * 0.986039;
-        double x = X / (X + Y + Z);
-        double y = Y / (X + Y + Z);
-
-
-        double[] result = {x, y};
-
-        return result;
-    }
-
     /**
      * Updates the album art palette
      * @param url The url of the album art image
