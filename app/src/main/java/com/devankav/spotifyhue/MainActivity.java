@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Gets the most vibrant color from a given palette
+     *
      * @param palette The palette being searched
      * @return The most vibrant color in the palette
      */
@@ -145,35 +146,39 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Updates the album art palette
+     *
      * @param url The url of the album art image
      */
     private void updatePalette(String url) {
         Picasso.get().load(url).into(new Target() { // Load the bitmap of the image
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                Palette palette = Palette.from(bitmap).generate(); // Generate a palette from the bitmap
+                Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                    public void onGenerated(Palette palette) {
+                        // Update swatch
+                        View vibrant = findViewById(R.id.vibrant);
+                        View vibrantDark = findViewById(R.id.vibrantDark);
+                        View vibrantLight = findViewById(R.id.vibrantLight);
+                        View muted = findViewById(R.id.muted);
+                        View mutedDark = findViewById(R.id.mutedDark);
+                        View mutedLight = findViewById(R.id.mutedLight);
+                        View dominant = findViewById(R.id.dominant);
 
-                // Update views with color
-                View vibrant = findViewById(R.id.vibrant);
-                View vibrantDark = findViewById(R.id.vibrantDark);
-                View vibrantLight = findViewById(R.id.vibrantLight);
-                View muted = findViewById(R.id.muted);
-                View mutedDark = findViewById(R.id.mutedDark);
-                View mutedLight = findViewById(R.id.mutedLight);
-                View dominant = findViewById(R.id.dominant);
+                        vibrant.setBackgroundColor(palette.getVibrantColor(0));
+                        vibrantDark.setBackgroundColor(palette.getDarkVibrantColor(0));
+                        vibrantLight.setBackgroundColor(palette.getLightVibrantColor(0));
+                        muted.setBackgroundColor(palette.getMutedColor(0));
+                        mutedDark.setBackgroundColor(palette.getDarkMutedColor(0));
+                        mutedLight.setBackgroundColor(palette.getLightMutedColor(0));
+                        dominant.setBackgroundColor(palette.getDominantColor(0));
 
-                vibrant.setBackgroundColor(palette.getVibrantColor(0));
-                vibrantDark.setBackgroundColor(palette.getDarkVibrantColor(0));
-                vibrantLight.setBackgroundColor(palette.getLightVibrantColor(0));
-                muted.setBackgroundColor(palette.getMutedColor(0));
-                mutedDark.setBackgroundColor(palette.getDarkMutedColor(0));
-                mutedLight.setBackgroundColor(palette.getLightMutedColor(0));
-                dominant.setBackgroundColor(palette.getDominantColor(0));
+                        // Update views with color
+                        int color = getColor(palette);
 
-                int color = getColor(palette);
-
-                ConstraintLayout constraintLayout = findViewById(R.id.mainConstraintLayout);
-                constraintLayout.setBackgroundColor(color);
+                        ConstraintLayout constraintLayout = findViewById(R.id.mainConstraintLayout);
+                        constraintLayout.setBackgroundColor(color);
+                    }
+                });
             }
 
             @Override
@@ -190,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Updates the album art display on the main page
+     *
      * @param playerState The player state passed in from event updates
      */
     private void updateAlbumArt(PlayerState playerState) {
@@ -201,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * The callback for a player event
+     *
      * @param playerState The state of player
      */
     private void playerStateUpdated(PlayerState playerState) {
