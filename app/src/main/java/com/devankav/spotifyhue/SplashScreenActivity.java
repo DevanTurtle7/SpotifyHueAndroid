@@ -1,7 +1,9 @@
 package com.devankav.spotifyhue;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +22,11 @@ public class SplashScreenActivity extends Activity {
             e.printStackTrace();
         }
 
-        if (true) {
+        SharedPreferences sharedPreferences = getSharedPreferences("bridgeMem", Context.MODE_PRIVATE);
+        String recent = sharedPreferences.getString("recent", null);
+        boolean connected = false;
+
+        if (recent != null && connected) {
             Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
             startActivity(intent);
         } else {
