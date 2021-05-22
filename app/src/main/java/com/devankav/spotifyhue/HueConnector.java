@@ -1,8 +1,13 @@
+/**
+ * A helper class that communicates with the Philips hue bridge and API.
+ *
+ * @author Devan Kavalchek
+ */
+
 package com.devankav.spotifyhue;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.provider.Settings;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
@@ -12,23 +17,14 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class HueConnector {
 
@@ -39,17 +35,31 @@ public class HueConnector {
     private GlobalRequestQueue queue;
     private SharedPreferences sharedPreferences;
 
+    /**
+     * The constructor
+     * @param context The application context. Used to make JSON requests and access shared preferences
+     */
     public HueConnector(Context context) {
-        this.queue = new GlobalRequestQueue(context);
-        this.sharedPreferences = context.getSharedPreferences("bridgeMem", Context.MODE_PRIVATE);
+        this.queue = new GlobalRequestQueue(context); // Create a new instance of the request queue
+        this.sharedPreferences = context.getSharedPreferences("bridgeMem", Context.MODE_PRIVATE); // Get the shared preferences instance
     }
 
+    /**
+     * Attempts to reconnect to a bridge that has previously been connected to
+     * @param ip The IP address of the bridge
+     * @param username The username used for the bridge
+     */
     public void reconnect(String ip, String username) {
 
     }
 
-    public BridgeStatus connect(String ip) {
-        final BridgeStatus[] result = {BridgeStatus.FAILED_TO_CONNECT};
+    /**
+     * Attempts to connect to a bridge
+     * @param ip The IP address of the bridge
+     * @return The status of the bridge (whether or not it connected)
+     */
+    public BridgeStatus[] connect(String ip) {
+        final BridgeStatus[] result = {null}; // Initialize the bridge state result
 
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
             @Override
@@ -67,6 +77,7 @@ public class HueConnector {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    result[0] = BridgeStatus.FAILED_TO_CONNECT;
                 }
 
             }
@@ -75,6 +86,7 @@ public class HueConnector {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                result[0] = BridgeStatus.FAILED_TO_CONNECT;
                 if (error.getMessage() != null) {
                     Log.e("HueConnector", error.getMessage());
                 } else {
@@ -90,10 +102,11 @@ public class HueConnector {
             JsonArrayBodyRequest jsonRequest = new JsonArrayBodyRequest(Request.Method.POST, url, body, listener, errorListener);
             queue.getRequestQueue().add(jsonRequest);
         } catch (JSONException e) {
+            result[0] = BridgeStatus.FAILED_TO_CONNECT;
             e.printStackTrace();
         }
 
-        return result[0];
+        return result;
     }
 
     public Map<String, String> getAllBridges(@Nullable ArrayAdapter adapter, @Nullable ArrayList<String> arrayList) {
