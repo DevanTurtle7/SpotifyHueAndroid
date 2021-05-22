@@ -19,11 +19,16 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class HueConnector {
 
     public static final String PREFIX = "http://";
     public static final String SUFFIX = "/api";
+    public static final String DISCOVERY_URL = PREFIX + "discovery.meethue.com";
 
     private GlobalRequestQueue queue;
 
@@ -78,5 +83,37 @@ public class HueConnector {
         }
 
         return result[0];
+    }
+
+    public Map<String, String> getAllBridges() {
+        Map<String, String> bridges = new HashMap<String, String>();
+
+        Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject current = response.getJSONObject(i);
+                        String id = current.getString("id");
+                        String ipAddress = current.getString("internalipaddress");
+
+                        bridges.put(id, ipAddress);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("HueConnector", error.getMessage());
+            }
+        };
+
+        JsonArrayRequest jsonRequest = new JsonArrayRequest(Request.Method.GET, DISCOVERY_URL, null, listener, errorListener);
+
+        return bridges;
     }
 }
