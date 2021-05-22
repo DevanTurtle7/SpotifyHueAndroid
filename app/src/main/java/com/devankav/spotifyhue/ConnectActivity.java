@@ -1,3 +1,9 @@
+/**
+ * The page that allows the user to connect to Philips hue bridges.
+ *
+ * @author Devan Kavalchek
+ */
+
 package com.devankav.spotifyhue;
 
 import android.app.Activity;
@@ -22,6 +28,7 @@ public class ConnectActivity extends Activity {
 
         setContentView(R.layout.activity_connect);
 
+        // Button for testing
         Button switchButton = findViewById(R.id.switchButton);
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -31,12 +38,12 @@ public class ConnectActivity extends Activity {
             }
         });
 
-        HueConnector connector = new HueConnector(this);
-        ArrayList<String> bridges = new ArrayList<>();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, bridges);
-        connector.getAllBridges(adapter, bridges);
+        HueConnector connector = new HueConnector(this); // Create a new connector instance
+        ArrayList<String> bridges = new ArrayList<>(); // Create a new list
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, bridges); // Create a new array adapter to update the list view
+        connector.getAllBridges(adapter, bridges); // Get all the available bridges on the network and update the list with them
 
         ListView bridgeList = findViewById(R.id.bridgeSelection);
-        bridgeList.setAdapter(adapter);
+        bridgeList.setAdapter(adapter); // Set the lists adapter to the one created
     }
 }

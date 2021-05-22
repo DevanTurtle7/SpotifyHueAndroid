@@ -1,3 +1,9 @@
+/**
+ * A custom JSON request, where the return type is a JSON array and the body is a JSON object.
+ *
+ * @author Devan Kavalchek
+ */
+
 package com.devankav.spotifyhue;
 
 import androidx.annotation.Nullable;
@@ -15,6 +21,15 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 public class JsonArrayBodyRequest extends JsonRequest<JSONArray> {
+
+    /**
+     * The constructor
+     * @param method The JSON method (get, post, put, etc.)
+     * @param url The URL the request is being made to
+     * @param requestBody The body of the request
+     * @param listener // The listener
+     * @param errorListener // The error listener
+     */
     public JsonArrayBodyRequest(int method, String url, JSONObject requestBody, Response.Listener<JSONArray> listener, @Nullable Response.ErrorListener errorListener) {
         super(method, url, requestBody == null ? null : requestBody.toString(), listener, errorListener);
     }
