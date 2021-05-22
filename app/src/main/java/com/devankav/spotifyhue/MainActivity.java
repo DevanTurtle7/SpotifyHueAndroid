@@ -93,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
         SpotifyAppRemote.disconnect(appRemote);
     }
 
+    /**
+     * Returns the URL of the album art of the current playing song
+     * @param playerState The player state, given by the player api
+     * @return A URL to the album art of the current song on spotify
+     */
     private String getImageURL(PlayerState playerState) {
         ImageUri imageUri = playerState.track.imageUri; // Get the image uri from the player state
         String[] tokens = imageUri.toString().split(":"); // Split the uri on colons

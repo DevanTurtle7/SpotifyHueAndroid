@@ -1,3 +1,10 @@
+/**
+ * The splash screen activity. Displays a splash screen and then navigates the user to another
+ * activity (connection page or home page).
+ *
+ * @author Devan Kavalchek
+ */
+
 package com.devankav.spotifyhue;
 
 import android.app.Activity;
@@ -11,15 +18,16 @@ import android.widget.Button;
 
 public class SplashScreenActivity extends Activity {
 
-    public static final int SPLASH_SCREEN_LENGTH = 2000;
+    public static final int SPLASH_SCREEN_LENGTH = 2000; // The length of the splash screen (in milliseconds)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_splashscreen);
-        long startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis(); // Get the current time
 
+        // Attempt to get the info of the last bridge that was connected
         SharedPreferences sharedPreferences = getSharedPreferences("bridgeMem", Context.MODE_PRIVATE);
         String recentIP = sharedPreferences.getString("recentIP", null);
         String recentUsername = sharedPreferences.getString("recentUsername", null);
