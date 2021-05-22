@@ -34,7 +34,7 @@ public class ConnectActivity extends Activity {
         HueConnector connector = new HueConnector(this);
         ArrayList<String> bridges = new ArrayList<>();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, bridges);
-        Map<String, String> results = connector.getAllBridges(adapter, bridges);
+        connector.getAllBridges(adapter, bridges);
 
         ListView bridgeList = findViewById(R.id.bridgeSelection);
         bridgeList.setAdapter(adapter);
