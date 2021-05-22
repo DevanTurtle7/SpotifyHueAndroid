@@ -84,34 +84,6 @@ public class MainActivity extends AppCompatActivity {
      * Runs when the spotify remote is successfully connected to
      */
     private void connected() {
-        /*
-        GlobalRequestQueue queue = new GlobalRequestQueue(getApplicationContext());
-
-        Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        Log.d("MainActivity", response.getJSONObject(i).getString("id"));
-                    } catch (JSONException e) {
-                        Log.e("MainActivity", "Caught JSON exception: " + e.getMessage());
-                    }
-                }
-            }
-        };
-
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("MainActivity", error.getMessage());
-            }
-        };
-
-        String url = "https://discovery.meethue.com";
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, listener, errorListener);
-        queue.getRequestQueue().add(jsonArrayRequest);
-         */
-
         appRemote.getPlayerApi().subscribeToPlayerState().setEventCallback(this::playerStateUpdated); // Subscribe to the player state
     }
 

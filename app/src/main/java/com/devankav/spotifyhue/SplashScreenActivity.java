@@ -23,10 +23,14 @@ public class SplashScreenActivity extends Activity {
         }
 
         SharedPreferences sharedPreferences = getSharedPreferences("bridgeMem", Context.MODE_PRIVATE);
-        String recent = sharedPreferences.getString("recent", null);
+        String recentIP = sharedPreferences.getString("recentIP", null);
+        String recentUsername = sharedPreferences.getString("recentUsername", null);
         boolean connected = false;
 
-        if (recent != null && connected) {
+        HueConnector hueConnector = new HueConnector(getApplicationContext());
+        hueConnector.connect("192.168.254.65");
+
+        if (connected) {
             Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
             startActivity(intent);
         } else {
