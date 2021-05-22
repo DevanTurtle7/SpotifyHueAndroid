@@ -13,9 +13,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
 public class SplashScreenActivity extends Activity {
 
@@ -37,10 +34,10 @@ public class SplashScreenActivity extends Activity {
 
         if (recentIP != null && recentUsername != null) { // Check if the previous info exists
             HueConnector hueConnector = new HueConnector(this); // Create a new HueConnector instance
-            BridgeStatus[] status = hueConnector.connect(""); // Attempt to connect to the bridge
+            BridgeState bridgeState = hueConnector.connect(""); // Attempt to connect to the bridge
             // TODO: Change to reconnect() instead of connect
 
-            while (status == null) { // Loop while the connection is not finished
+            while (bridgeState.getStatus() == BridgeStatus.NOT_CONNECTED) { // Loop while the connection is not finished
                 try {
                     Thread.sleep(100); // Sleep for 100 milliseconds
                 } catch (InterruptedException e) {
@@ -48,7 +45,7 @@ public class SplashScreenActivity extends Activity {
                 }
             }
 
-            if (status[0] == BridgeStatus.CONNECTED) { // Check if the connection was successful
+            if (bridgeState.getStatus() == BridgeStatus.CONNECTED) { // Check if the connection was successful
                 connected = true;
             }
         }

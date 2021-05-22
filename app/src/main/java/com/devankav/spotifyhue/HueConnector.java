@@ -58,8 +58,8 @@ public class HueConnector {
      * @param ip The IP address of the bridge
      * @return The status of the bridge (whether or not it connected)
      */
-    public BridgeStatus[] connect(String ip) {
-        final BridgeStatus[] result = {null}; // Initialize the bridge state result
+    public BridgeState connect(String ip) {
+        final BridgeState result = new BridgeState(); // Initialize the bridge state result
 
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
             @Override
@@ -68,16 +68,16 @@ public class HueConnector {
                     JSONObject body = response.getJSONObject(0);
 
                     if (body.get("error") != null) {
-                        result[0] = BridgeStatus.LINK_BUTTON_NOT_PRESSED;
+                        result.updateStatus(BridgeStatus.LINK_BUTTON_NOT_PRESSED);
                     } else {
-                        result[0] = BridgeStatus.CONNECTED;
+                        result.updateStatus(BridgeStatus.CONNECTED);
 
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         // TODO: Write bridge info to shared prefs
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    result[0] = BridgeStatus.FAILED_TO_CONNECT;
+                    result.updateStatus(BridgeStatus.FAILED_TO_CONNECT);
                 }
 
             }
@@ -86,7 +86,7 @@ public class HueConnector {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                result[0] = BridgeStatus.FAILED_TO_CONNECT;
+                result.updateStatus(BridgeStatus.FAILED_TO_CONNECT);
                 if (error.getMessage() != null) {
                     Log.e("HueConnector", error.getMessage());
                 } else {
@@ -102,7 +102,7 @@ public class HueConnector {
             JsonArrayBodyRequest jsonRequest = new JsonArrayBodyRequest(Request.Method.POST, url, body, listener, errorListener);
             queue.getRequestQueue().add(jsonRequest);
         } catch (JSONException e) {
-            result[0] = BridgeStatus.FAILED_TO_CONNECT;
+            result.updateStatus(BridgeStatus.FAILED_TO_CONNECT);
             e.printStackTrace();
         }
 
