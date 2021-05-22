@@ -25,15 +25,14 @@ public class SplashScreenActivity extends Activity {
         SharedPreferences sharedPreferences = getSharedPreferences("bridgeMem", Context.MODE_PRIVATE);
         String recentIP = sharedPreferences.getString("recentIP", null);
         String recentUsername = sharedPreferences.getString("recentUsername", null);
-        boolean connected = false;
 
         HueConnector hueConnector = new HueConnector(getApplicationContext());
-        hueConnector.connect("192.168.254.65");
+        BridgeStatus status = hueConnector.connect("192.168.254.65");
 
-        if (connected) {
+        if (status == BridgeStatus.CONNECTED) {
             Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
             startActivity(intent);
-        } else {
+        } else { // May want to add another else/if for push button state. Would probably never happen though.
             Intent intent = new Intent(SplashScreenActivity.this, ConnectActivity.class);
             startActivity(intent);
         }

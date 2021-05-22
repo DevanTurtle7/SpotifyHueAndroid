@@ -35,13 +35,28 @@ public class HueConnector {
 
     }
 
-    public void connect(String ip) {
-        final BridgeStatus result;
+    public BridgeStatus connect(String ip) {
+        final BridgeStatus[] result = {BridgeStatus.FAILED_TO_CONNECT};
 
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 Log.d("HueConnector", response.toString());
+                try {
+                    JSONObject body = response.getJSONObject(0);
+
+                    if (body.get("error") != null) {
+                        result[0] = BridgeStatus.LINK_BUTTON_NOT_PRESSED;
+                    } else {
+                        result[0] = BridgeStatus.CONNECTED;
+                    }
+
+                    Log.d("HueConnector", body.get("error").toString());
+                    //Log.d("HueConnector", body.get("type").toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         };
 
@@ -52,16 +67,16 @@ public class HueConnector {
             }
         };
 
-        String url = PREFIX + ip + SUFFIX;
-        Log.d("HueConnector", url);
-        JSONObject body = new JSONObject();
-
         try {
+            String url = PREFIX + ip + SUFFIX;
+            JSONObject body = new JSONObject();
             body.put("devicetype", "spotify_hue#android");
             JsonArrayBodyRequest jsonRequest = new JsonArrayBodyRequest(Request.Method.POST, url, body, listener, errorListener);
             queue.getRequestQueue().add(jsonRequest);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        return result[0];
     }
 }
