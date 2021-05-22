@@ -8,6 +8,7 @@ package com.devankav.spotifyhue;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
@@ -61,32 +62,42 @@ public class HueConnector {
     public BridgeState connect(String ip) {
         final BridgeState result = new BridgeState(); // Initialize the bridge state result
 
+        // Create a new response listener
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
-                    JSONObject body = response.getJSONObject(0);
+                    JSONObject body = response.getJSONObject(0); // Get the object that was returned
 
-                    if (body.get("error") != null) {
+                    if (body.get("error") != null) { // Check if there was an error
+                        // TODO: Add if statements for errors
                         result.updateStatus(BridgeStatus.LINK_BUTTON_NOT_PRESSED);
                     } else {
                         result.updateStatus(BridgeStatus.CONNECTED);
 
+                        // Save the bridge information in shared preferences
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         // TODO: Write bridge info to shared prefs
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
                     result.updateStatus(BridgeStatus.FAILED_TO_CONNECT);
-                }
 
+                    if (e.getMessage() != null) {
+                        Log.e("HueConnector", e.getMessage());
+                    } else {
+                        Log.e("HueConnector", "There was an unknown error while trying to connect.");
+                    }
+                }
             }
         };
 
+        // Create a new error listener
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 result.updateStatus(BridgeStatus.FAILED_TO_CONNECT);
+
+                // Print the error message
                 if (error.getMessage() != null) {
                     Log.e("HueConnector", error.getMessage());
                 } else {
@@ -96,44 +107,68 @@ public class HueConnector {
         };
 
         try {
+            // Create a new json request
             String url = PREFIX + ip + SUFFIX;
+
+            // Create the body of the JSON call
             JSONObject body = new JSONObject();
-            body.put("devicetype", "spotify_hue#android");
+            String device = Build.MODEL;
+            body.put("devicetype", "spotify_hue#" + device);
+
             JsonArrayBodyRequest jsonRequest = new JsonArrayBodyRequest(Request.Method.POST, url, body, listener, errorListener);
-            queue.getRequestQueue().add(jsonRequest);
+
+            queue.getRequestQueue().add(jsonRequest); // Make the JSON call
         } catch (JSONException e) {
             result.updateStatus(BridgeStatus.FAILED_TO_CONNECT);
-            e.printStackTrace();
+
+            if (e.getMessage() != null) {
+                Log.e("HueConnector", e.getMessage());
+            } else {
+                Log.e("HueConnector", "There was an unknown error");
+            }
         }
 
         return result;
     }
 
+    /**
+     * Returns a map containing all of the bridges on the network. Can also update a list view when given
+     * an ArrayAdapter and an ArrayList.
+     * @param adapter
+     * @param arrayList
+     * @return A map containing all of the bridges on the network.
+     */
     public Map<String, String> getAllBridges(@Nullable ArrayAdapter adapter, @Nullable ArrayList<String> arrayList) {
-        Map<String, String> bridges = new HashMap<String, String>();
+        Map<String, String> bridges = new HashMap<String, String>(); // Create a new HashMap
 
+        // Create a new listener
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                for (int i = 0; i < response.length(); i++) {
+                for (int i = 0; i < response.length(); i++) { // Iterate over all the JSON objects in the response
                     try {
-                        JSONObject current = response.getJSONObject(i);
-                        String id = current.getString("id");
-                        String ipAddress = current.getString("internalipaddress");
+                        JSONObject current = response.getJSONObject(i); // Get the JSON object at the current index
+                        String id = current.getString("id"); // Get the id of the bridge
+                        String ipAddress = current.getString("internalipaddress"); // Get the ip address of the bridge
 
-                        bridges.put(id, ipAddress);
+                        bridges.put(id, ipAddress); // Add the bridge info the map
 
-                        if (adapter != null && arrayList != null) {
-                            arrayList.add(ipAddress);
-                            adapter.notifyDataSetChanged();
+                        if (adapter != null && arrayList != null) { // Check if there was an array and an adapter passed in
+                            arrayList.add(ipAddress); // Add the bridge to the list
+                            adapter.notifyDataSetChanged(); // Notify the adapter
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        if (e.getMessage() != null) {
+                            Log.e("HueConnector", e.getMessage());
+                        } else {
+                            Log.e("HueConnector", "There was an unexpected error while getting all bridges");
+                        }
                     }
                 }
             }
         };
 
+        // Create a new error listener
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -146,7 +181,7 @@ public class HueConnector {
         };
 
         JsonArrayRequest jsonRequest = new JsonArrayRequest(Request.Method.GET, DISCOVERY_URL, null, listener, errorListener);
-        queue.getRequestQueue().add(jsonRequest);
+        queue.getRequestQueue().add(jsonRequest); // Make the JSON call
 
         return bridges;
     }
