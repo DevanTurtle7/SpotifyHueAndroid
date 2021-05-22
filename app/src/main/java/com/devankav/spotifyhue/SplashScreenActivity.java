@@ -14,6 +14,12 @@ public class SplashScreenActivity extends Activity {
 
         setContentView(R.layout.activity_splashscreen);
 
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if (true) {
             Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
             startActivity(intent);
