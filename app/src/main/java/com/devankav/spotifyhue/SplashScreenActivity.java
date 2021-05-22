@@ -26,7 +26,7 @@ public class SplashScreenActivity extends Activity {
         String recentIP = sharedPreferences.getString("recentIP", null);
         String recentUsername = sharedPreferences.getString("recentUsername", null);
 
-        HueConnector hueConnector = new HueConnector(getApplicationContext());
+        HueConnector hueConnector = new HueConnector(this);
         BridgeStatus status = hueConnector.connect("192.168.254.65");
 
         if (status == BridgeStatus.CONNECTED) {

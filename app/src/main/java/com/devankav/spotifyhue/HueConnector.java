@@ -69,7 +69,11 @@ public class HueConnector {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("HueConnector", error.getMessage());
+                if (error.getMessage() != null) {
+                    Log.e("HueConnector", error.getMessage());
+                } else {
+                    Log.e("HueConnector", "There was an unknown error getting all bridges.");
+                }
             }
         };
 
@@ -92,7 +96,6 @@ public class HueConnector {
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                Log.d("HueConnector", "helllo");
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject current = response.getJSONObject(i);

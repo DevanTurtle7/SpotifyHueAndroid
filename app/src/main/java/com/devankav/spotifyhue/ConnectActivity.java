@@ -35,7 +35,6 @@ public class ConnectActivity extends Activity {
         ArrayList<String> bridges = new ArrayList<>();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, bridges);
         Map<String, String> results = connector.getAllBridges(adapter, bridges);
-        Log.d("ConnectActivity", results.keySet().size() + "");
 
         ListView bridgeList = findViewById(R.id.bridgeSelection);
         bridgeList.setAdapter(adapter);
