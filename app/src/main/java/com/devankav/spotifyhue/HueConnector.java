@@ -1,6 +1,7 @@
 package com.devankav.spotifyhue;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -36,9 +37,11 @@ public class HueConnector {
     public static final String DISCOVERY_URL = "https://discovery.meethue.com";
 
     private GlobalRequestQueue queue;
+    private SharedPreferences sharedPreferences;
 
     public HueConnector(Context context) {
         this.queue = new GlobalRequestQueue(context);
+        this.sharedPreferences = context.getSharedPreferences("bridgeMem", Context.MODE_PRIVATE);
     }
 
     public void reconnect(String ip, String username) {
@@ -58,6 +61,9 @@ public class HueConnector {
                         result[0] = BridgeStatus.LINK_BUTTON_NOT_PRESSED;
                     } else {
                         result[0] = BridgeStatus.CONNECTED;
+
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        // TODO: Write bridge info to shared prefs
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

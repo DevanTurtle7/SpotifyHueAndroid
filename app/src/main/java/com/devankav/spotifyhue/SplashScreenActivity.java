@@ -45,7 +45,7 @@ public class SplashScreenActivity extends Activity {
                 if (status == BridgeStatus.CONNECTED) {
                     Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
                     startActivity(intent);
-                } else { // May want to add another else/if for push button state. Would probably never happen though.
+                } else { // TODO: May want to add another else/if for push button state. Would probably never happen though.
                     Intent intent = new Intent(SplashScreenActivity.this, ConnectActivity.class);
                     startActivity(intent);
                 }
