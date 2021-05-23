@@ -50,8 +50,8 @@ public class HueConnector {
      * @param ip The IP address of the bridge
      * @param username The username used for the bridge
      */
-    public void reconnect(String ip, String username) {
-
+    public BridgeState reconnect(String ip, String username) {
+        return null;
     }
 
     /**

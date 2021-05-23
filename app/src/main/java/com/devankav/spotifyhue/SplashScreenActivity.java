@@ -18,6 +18,12 @@ public class SplashScreenActivity extends Activity {
 
     public static final int SPLASH_SCREEN_LENGTH = 2000; // The length of the splash screen (in milliseconds)
 
+    /**
+     * Calculates how much longer the splash screen should last. It should last a
+     * minimum of SPLASH_SCREEN_LENGTH.
+     * @param startTime When the timer was started
+     * @return How much longer the splash screen should last.
+     */
     public long getSplashScreenDuration(long startTime) {
         long endTime = System.currentTimeMillis(); // Get the current time
         long elapsedTime = endTime - startTime; // Get the elapsed time (how long the user has been waiting on the splash screen)
@@ -32,13 +38,19 @@ public class SplashScreenActivity extends Activity {
         return splashScreenDuration;
     }
 
+    /**
+     * Exits out of the splash screen in a given amount of time and navigates to a
+     * new page.
+     * @param intent The new page
+     * @param splashScreenDuration How much longer the splash screen should last
+     */
     public void exitSplashScreen(Intent intent, long splashScreenDuration) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(intent);
+                startActivity(intent); // Start the new activity
             }
-        }, splashScreenDuration);
+        }, splashScreenDuration); // Wait the given time
     }
 
     @Override
@@ -55,25 +67,26 @@ public class SplashScreenActivity extends Activity {
 
         if (recentIP != null && recentUsername != null) { // Check if the previous info exists
             HueConnector hueConnector = new HueConnector(this); // Create a new HueConnector instance
-            BridgeState bridgeState = hueConnector.connect(""); // Attempt to connect to the bridge
-            // TODO: Change to reconnect() instead of connect
+            BridgeState bridgeState = hueConnector.reconnect(recentIP, recentUsername); // Attempt to connect to the bridge
 
+            // Create a new bridge state observer
             bridgeState.registerObserver(new BridgeStateObserver() {
                 @Override
                 public void BridgeStateUpdated(BridgeStatus bridgeStatus) {
+                    // Navigate to the home page if the bridge was connected. Navigate to the connect page otherwise.
                     Intent intent = new Intent(
                             SplashScreenActivity.this,
                             bridgeStatus == BridgeStatus.CONNECTED ? MainActivity.class : ConnectActivity.class
                     );
 
                     long splashScreenDuration = getSplashScreenDuration(startTime); // Get the splash screen duration
-                    exitSplashScreen(intent, splashScreenDuration);
+                    exitSplashScreen(intent, splashScreenDuration); // Exit the splash screen
                 }
             });
         } else {
             Intent intent = new Intent(SplashScreenActivity.this, ConnectActivity.class);
             long splashScreenDuration = getSplashScreenDuration(startTime); // Get the splash screen duration
-            exitSplashScreen(intent, splashScreenDuration);
+            exitSplashScreen(intent, splashScreenDuration); // Exit the splash screen
         }
     }
 }
