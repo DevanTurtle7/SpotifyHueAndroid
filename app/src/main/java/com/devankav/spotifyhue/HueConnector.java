@@ -132,15 +132,8 @@ public class HueConnector {
         return result;
     }
 
-    /**
-     * Returns a map containing all of the bridges on the network. Can also update a list view when given
-     * an ArrayAdapter and an ArrayList.
-     * @param adapter
-     * @param arrayList
-     * @return A map containing all of the bridges on the network.
-     */
-    public Map<String, String> getAllBridges(@Nullable ArrayAdapter adapter, @Nullable ArrayList<String> arrayList) {
-        Map<String, String> bridges = new HashMap<String, String>(); // Create a new HashMap
+    public DiscoveryResult getAllBridges() {
+        final DiscoveryResult discoveryResult = new DiscoveryResult();
 
         // Create a new listener
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
@@ -152,12 +145,8 @@ public class HueConnector {
                         String id = current.getString("id"); // Get the id of the bridge
                         String ipAddress = current.getString("internalipaddress"); // Get the ip address of the bridge
 
-                        bridges.put(id, ipAddress); // Add the bridge info the map
-
-                        if (adapter != null && arrayList != null) { // Check if there was an array and an adapter passed in
-                            arrayList.add(ipAddress); // Add the bridge to the list
-                            adapter.notifyDataSetChanged(); // Notify the adapter
-                        }
+                        BridgeResult bridgeResult = new BridgeResult(id, ipAddress); // Create a new bridge result
+                        discoveryResult.addBridge(bridgeResult); // Add the bridge to the results
                     } catch (JSONException e) {
                         if (e.getMessage() != null) {
                             Log.e("HueConnector", e.getMessage());
@@ -184,6 +173,6 @@ public class HueConnector {
         JsonArrayRequest jsonRequest = new JsonArrayRequest(Request.Method.GET, DISCOVERY_URL, null, listener, errorListener);
         queue.getRequestQueue().add(jsonRequest); // Make the JSON call
 
-        return bridges;
+        return discoveryResult;
     }
 }

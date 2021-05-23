@@ -6,5 +6,5 @@
 
 package com.devankav.spotifyhue;
 
-public abstract class BridgeStateObserver implements Observer<BridgeState> {
+public interface BridgeStateObserver extends Observer<BridgeState> {
 }

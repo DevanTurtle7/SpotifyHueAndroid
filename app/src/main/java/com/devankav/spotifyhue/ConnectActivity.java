@@ -39,11 +39,19 @@ public class ConnectActivity extends Activity {
         });
 
         HueConnector connector = new HueConnector(this); // Create a new connector instance
+        DiscoveryResult discoveryResult = connector.getAllBridges(); // Get all the available bridges on the network and update the list with them
+
         ArrayList<String> bridges = new ArrayList<>(); // Create a new list
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, bridges); // Create a new array adapter to update the list view
-        connector.getAllBridges(adapter, bridges); // Get all the available bridges on the network and update the list with them
-
         ListView bridgeList = findViewById(R.id.bridgeSelection);
         bridgeList.setAdapter(adapter); // Set the lists adapter to the one created
+
+        discoveryResult.registerObserver(new DiscoveryObserver() {
+            @Override
+            public void notifyObserver(BridgeResult updated) {
+                bridges.add(updated.getIpAddress()); // Add the bridge to the list
+                adapter.notifyDataSetChanged(); // Notify the adapter
+            }
+        });
     }
 }
