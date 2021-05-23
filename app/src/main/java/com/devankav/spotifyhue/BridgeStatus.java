@@ -11,8 +11,8 @@ import java.util.Set;
 
 public class BridgeStatus {
 
-    BridgeState bridgeState;
-    Set<BridgeStateObserver> observers;
+    private BridgeState bridgeState;
+    private Set<BridgeStateObserver> observers;
 
     /**
      * The constructor

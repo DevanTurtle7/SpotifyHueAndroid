@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Returns the URL of the album art of the current playing song
+     *
      * @param playerState The player state, given by the player api
      * @return A URL to the album art of the current song on spotify
      */
@@ -137,47 +138,39 @@ public class MainActivity extends AppCompatActivity {
      * @param url The url of the album art image
      */
     private void updatePalette(String url) {
-        Picasso.get().load(url).into(new Target() { // Load the bitmap of the image
+        AlbumArtPalette albumArtPalette = new AlbumArtPalette();
+
+        PaletteObserver observer = new PaletteObserver() {
             @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                    public void onGenerated(Palette palette) {
-                        // Update swatch
-                        View vibrant = findViewById(R.id.vibrant);
-                        View vibrantDark = findViewById(R.id.vibrantDark);
-                        View vibrantLight = findViewById(R.id.vibrantLight);
-                        View muted = findViewById(R.id.muted);
-                        View mutedDark = findViewById(R.id.mutedDark);
-                        View mutedLight = findViewById(R.id.mutedLight);
-                        View dominant = findViewById(R.id.dominant);
+            public void paletteUpdated(Palette palette) {
+                // Update swatch
+                View vibrant = findViewById(R.id.vibrant);
+                View vibrantDark = findViewById(R.id.vibrantDark);
+                View vibrantLight = findViewById(R.id.vibrantLight);
+                View muted = findViewById(R.id.muted);
+                View mutedDark = findViewById(R.id.mutedDark);
+                View mutedLight = findViewById(R.id.mutedLight);
+                View dominant = findViewById(R.id.dominant);
 
-                        vibrant.setBackgroundColor(palette.getVibrantColor(0));
-                        vibrantDark.setBackgroundColor(palette.getDarkVibrantColor(0));
-                        vibrantLight.setBackgroundColor(palette.getLightVibrantColor(0));
-                        muted.setBackgroundColor(palette.getMutedColor(0));
-                        mutedDark.setBackgroundColor(palette.getDarkMutedColor(0));
-                        mutedLight.setBackgroundColor(palette.getLightMutedColor(0));
-                        dominant.setBackgroundColor(palette.getDominantColor(0));
+                vibrant.setBackgroundColor(palette.getVibrantColor(0));
+                vibrantDark.setBackgroundColor(palette.getDarkVibrantColor(0));
+                vibrantLight.setBackgroundColor(palette.getLightVibrantColor(0));
+                muted.setBackgroundColor(palette.getMutedColor(0));
+                mutedDark.setBackgroundColor(palette.getDarkMutedColor(0));
+                mutedLight.setBackgroundColor(palette.getLightMutedColor(0));
+                dominant.setBackgroundColor(palette.getDominantColor(0));
 
-                        // Update views with color
-                        int color = getColor(palette);
+                // Update views with color
+                int color = getColor(palette);
 
-                        ConstraintLayout constraintLayout = findViewById(R.id.mainConstraintLayout);
-                        constraintLayout.setBackgroundColor(color);
-                    }
-                });
+                ConstraintLayout constraintLayout = findViewById(R.id.mainConstraintLayout);
+                constraintLayout.setBackgroundColor(color);
             }
+        };
 
-            @Override
-            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+        albumArtPalette.registerObserver(observer);
 
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        });
+        Picasso.get().load(url).into(albumArtPalette);
     }
 
     /**
