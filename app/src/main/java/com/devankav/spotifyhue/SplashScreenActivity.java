@@ -19,12 +19,12 @@ public class SplashScreenActivity extends Activity {
     public static final int SPLASH_SCREEN_LENGTH = 2000; // The length of the splash screen (in milliseconds)
 
     /**
-     * Calculates how much longer the splash screen should last. It should last a
-     * minimum of SPLASH_SCREEN_LENGTH.
-     * @param startTime When the timer was started
-     * @return How much longer the splash screen should last.
+     * Exits out of the splash screen in a given amount of time and navigates to a given page. The splash screen should
+     * last a minimum of SPLASH_SCREEN_LENGTH
+     * @param intent The new page being navigated to
+     * @param startTime When the splash screen was started
      */
-    public long getSplashScreenDuration(long startTime) {
+    public void exitSplashScreen(Intent intent, long startTime) {
         long endTime = System.currentTimeMillis(); // Get the current time
         long elapsedTime = endTime - startTime; // Get the elapsed time (how long the user has been waiting on the splash screen)
         // Determine how much longer the user should wait on the splash screen, such that they are on the screen for a minimum of SPLASH_SCREEN_LENGTH
@@ -35,16 +35,6 @@ public class SplashScreenActivity extends Activity {
             splashScreenDuration = 0;
         }
 
-        return splashScreenDuration;
-    }
-
-    /**
-     * Exits out of the splash screen in a given amount of time and navigates to a
-     * new page.
-     * @param intent The new page
-     * @param splashScreenDuration How much longer the splash screen should last
-     */
-    public void exitSplashScreen(Intent intent, long splashScreenDuration) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -79,14 +69,12 @@ public class SplashScreenActivity extends Activity {
                             bridgeStatus == BridgeStatus.CONNECTED ? MainActivity.class : ConnectActivity.class
                     );
 
-                    long splashScreenDuration = getSplashScreenDuration(startTime); // Get the splash screen duration
-                    exitSplashScreen(intent, splashScreenDuration); // Exit the splash screen
+                    exitSplashScreen(intent, startTime); // Exit the splash screen
                 }
             });
         } else {
             Intent intent = new Intent(SplashScreenActivity.this, ConnectActivity.class);
-            long splashScreenDuration = getSplashScreenDuration(startTime); // Get the splash screen duration
-            exitSplashScreen(intent, splashScreenDuration); // Exit the splash screen
+            exitSplashScreen(intent, startTime); // Exit the splash screen
         }
     }
 }
