@@ -102,7 +102,11 @@ public class LightSync extends Service {
 
             @Override
             public void onFailure(Throwable throwable) {
-                Log.e("LightSync", throwable.getMessage(), throwable);
+                if (throwable.getMessage() != null) {
+                    Log.e("LightSync", throwable.getMessage(), throwable);
+                } else {
+                    Log.e("LightSync", "An unknown error occurred while trying to connect to the spotify app remote.");
+                }
             }
         });
 
