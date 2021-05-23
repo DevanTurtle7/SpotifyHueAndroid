@@ -6,15 +6,20 @@
 
 package com.devankav.spotifyhue;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class BridgeState {
 
     BridgeStatus bridgeStatus;
+    Set<BridgeStateObserver> observers;
 
     /**
      * The constructor
      */
     public BridgeState() {
         bridgeStatus = BridgeStatus.NOT_CONNECTED;
+        observers = new HashSet<>();
     }
 
     /**
@@ -31,5 +36,20 @@ public class BridgeState {
      */
     public void updateStatus(BridgeStatus bridgeStatus) {
         this.bridgeStatus = bridgeStatus;
+        notifyObservers();
+    }
+
+    public void registerObserver(BridgeStateObserver observer) {
+        this.observers.add(observer);
+    }
+
+    public void deregisterObserver(BridgeStateObserver observer) {
+        this.observers.remove(observer);
+    }
+
+    public void notifyObservers() {
+        for (BridgeStateObserver observer : observers) {
+            observer.BridgeStateUpdated();
+        }
     }
 }
