@@ -36,7 +36,7 @@ public class BridgeState {
      */
     public void updateStatus(BridgeStatus bridgeStatus) {
         this.bridgeStatus = bridgeStatus;
-        notifyObservers();
+        notifyObservers(bridgeStatus);
     }
 
     public void registerObserver(BridgeStateObserver observer) {
@@ -47,9 +47,9 @@ public class BridgeState {
         this.observers.remove(observer);
     }
 
-    public void notifyObservers() {
+    public void notifyObservers(BridgeStatus bridgeStatus) {
         for (BridgeStateObserver observer : observers) {
-            observer.BridgeStateUpdated();
+            observer.BridgeStateUpdated(bridgeStatus);
         }
     }
 }

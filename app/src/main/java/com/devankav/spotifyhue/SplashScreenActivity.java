@@ -37,44 +37,80 @@ public class SplashScreenActivity extends Activity {
             BridgeState bridgeState = hueConnector.connect(""); // Attempt to connect to the bridge
             // TODO: Change to reconnect() instead of connect
 
-            while (bridgeState.getStatus() == BridgeStatus.NOT_CONNECTED) { // Loop while the connection is not finished
-                try {
-                    Thread.sleep(100); // Sleep for 100 milliseconds
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            BridgeStateObserver observer = new BridgeStateObserver() {
+                @Override
+                public void BridgeStateUpdated(BridgeStatus bridgeStatus) {
+                    Intent intent = new Intent(
+                            SplashScreenActivity.this,
+                            bridgeStatus == BridgeStatus.CONNECTED ? MainActivity.class : ConnectActivity.class
+                    );
+
+                    long endTime = System.currentTimeMillis(); // Get the current time
+                    long elapsedTime = endTime - startTime; // Get the elapsed time (how long the user has been waiting on the splash screen)
+                    // Determine how much longer the user should wait on the splash screen, such that they are on the screen for a minimum of SPLASH_SCREEN_LENGTH
+                    long splashScreenDuration = SPLASH_SCREEN_LENGTH - elapsedTime;
+
+                    // Make sure the duration is not negative
+                    if (splashScreenDuration < 0) {
+                        splashScreenDuration = 0;
+                    }
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            startActivity(intent);
+                        }
+                    }, splashScreenDuration);
                 }
+            };
+
+            bridgeState.registerObserver(observer);
+        } else {
+            Intent intent = new Intent(SplashScreenActivity.this, ConnectActivity.class);
+            long endTime = System.currentTimeMillis(); // Get the current time
+            long elapsedTime = endTime - startTime; // Get the elapsed time (how long the user has been waiting on the splash screen)
+            // Determine how much longer the user should wait on the splash screen, such that they are on the screen for a minimum of SPLASH_SCREEN_LENGTH
+            long splashScreenDuration = SPLASH_SCREEN_LENGTH - elapsedTime;
+
+            // Make sure the duration is not negative
+            if (splashScreenDuration < 0) {
+                splashScreenDuration = 0;
             }
 
-            if (bridgeState.getStatus() == BridgeStatus.CONNECTED) { // Check if the connection was successful
-                connected = true;
-            }
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(intent);
+                }
+            }, splashScreenDuration);
         }
 
-        long endTime = System.currentTimeMillis(); // Get the current time
-        long elapsedTime = endTime - startTime; // Get the elapsed time (how long the user has been waiting on the splash screen)
-        // Determine how much longer the user should wait on the splash screen, such that they are on the screen for a minimum of SPLASH_SCREEN_LENGTH
-        long splashScreenDuration = SPLASH_SCREEN_LENGTH - elapsedTime;
+        /**
+         long endTime = System.currentTimeMillis(); // Get the current time
+         long elapsedTime = endTime - startTime; // Get the elapsed time (how long the user has been waiting on the splash screen)
+         // Determine how much longer the user should wait on the splash screen, such that they are on the screen for a minimum of SPLASH_SCREEN_LENGTH
+         long splashScreenDuration = SPLASH_SCREEN_LENGTH - elapsedTime;
 
-        // Make sure the duration is not negative
-        if (splashScreenDuration < 0) {
-            splashScreenDuration = 0;
+         // Make sure the duration is not negative
+         if (splashScreenDuration < 0) {
+         splashScreenDuration = 0;
+         }
+
+         // Navigate the user to the next page after the duration
+         boolean finalConnected = connected;
+         new Handler().postDelayed(new Runnable() {
+        @Override public void run() {
+        if (finalConnected) { // Check if the bridge was successfully connected to
+        // Send the user to the home screen
+        Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+        startActivity(intent);
+        } else { // TODO: May want to add another else/if for push button state. Would probably never happen though.
+        // Send the user to the connection screen
+        Intent intent = new Intent(SplashScreenActivity.this, ConnectActivity.class);
+        startActivity(intent);
         }
-
-        // Navigate the user to the next page after the duration
-        boolean finalConnected = connected;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (finalConnected) { // Check if the bridge was successfully connected to
-                    // Send the user to the home screen
-                    Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-                    startActivity(intent);
-                } else { // TODO: May want to add another else/if for push button state. Would probably never happen though.
-                    // Send the user to the connection screen
-                    Intent intent = new Intent(SplashScreenActivity.this, ConnectActivity.class);
-                    startActivity(intent);
-                }
-            }
+        }
         }, splashScreenDuration);
+         **/
     }
 }
