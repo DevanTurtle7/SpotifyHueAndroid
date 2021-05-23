@@ -2,6 +2,5 @@ package com.devankav.spotifyhue;
 
 import androidx.palette.graphics.Palette;
 
-public interface PaletteObserver {
-    public void paletteUpdated(Palette palette);
+public abstract class PaletteObserver implements Observer<Palette> {
 }

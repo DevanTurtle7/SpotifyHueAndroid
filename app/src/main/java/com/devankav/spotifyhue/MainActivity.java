@@ -142,7 +142,8 @@ public class MainActivity extends AppCompatActivity {
 
         PaletteObserver observer = new PaletteObserver() {
             @Override
-            public void paletteUpdated(Palette palette) {
+            public void notifyObserver(Palette updated) {
+
                 // Update swatch
                 View vibrant = findViewById(R.id.vibrant);
                 View vibrantDark = findViewById(R.id.vibrantDark);
@@ -152,16 +153,16 @@ public class MainActivity extends AppCompatActivity {
                 View mutedLight = findViewById(R.id.mutedLight);
                 View dominant = findViewById(R.id.dominant);
 
-                vibrant.setBackgroundColor(palette.getVibrantColor(0));
-                vibrantDark.setBackgroundColor(palette.getDarkVibrantColor(0));
-                vibrantLight.setBackgroundColor(palette.getLightVibrantColor(0));
-                muted.setBackgroundColor(palette.getMutedColor(0));
-                mutedDark.setBackgroundColor(palette.getDarkMutedColor(0));
-                mutedLight.setBackgroundColor(palette.getLightMutedColor(0));
-                dominant.setBackgroundColor(palette.getDominantColor(0));
+                vibrant.setBackgroundColor(updated.getVibrantColor(0));
+                vibrantDark.setBackgroundColor(updated.getDarkVibrantColor(0));
+                vibrantLight.setBackgroundColor(updated.getLightVibrantColor(0));
+                muted.setBackgroundColor(updated.getMutedColor(0));
+                mutedDark.setBackgroundColor(updated.getDarkMutedColor(0));
+                mutedLight.setBackgroundColor(updated.getLightMutedColor(0));
+                dominant.setBackgroundColor(updated.getDominantColor(0));
 
                 // Update views with color
-                int color = getColor(palette);
+                int color = getColor(updated);
 
                 ConstraintLayout constraintLayout = findViewById(R.id.mainConstraintLayout);
                 constraintLayout.setBackgroundColor(color);

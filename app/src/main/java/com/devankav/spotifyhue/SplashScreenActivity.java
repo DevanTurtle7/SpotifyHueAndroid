@@ -62,7 +62,7 @@ public class SplashScreenActivity extends Activity {
             // Create and register a new bridge state observer
             bridgeState.registerObserver(new BridgeStateObserver() {
                 @Override
-                public void BridgeStateUpdated(BridgeState bridgeState) {
+                public void notifyObserver(BridgeState bridgeState) {
                     // Navigate to the home page if the bridge was connected. Navigate to the connect page otherwise.
                     Intent intent = new Intent(
                             SplashScreenActivity.this,
