@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String IMAGE_PREFIX = "https://i.scdn.co/image/";
 
     private SpotifyAppRemote appRemote;
+    private AlbumArtPalette albumArtPalette;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,39 @@ public class MainActivity extends AppCompatActivity {
      */
     private void connected() {
         appRemote.getPlayerApi().subscribeToPlayerState().setEventCallback(this::playerStateUpdated); // Subscribe to the player state
+        albumArtPalette = new AlbumArtPalette(); // Create a new album art palette
+
+        // Create a new palette observer
+        PaletteObserver observer = new PaletteObserver() {
+            @Override
+            public void notifyObserver(Palette updated) {
+
+                // Update swatch
+                View vibrant = findViewById(R.id.vibrant);
+                View vibrantDark = findViewById(R.id.vibrantDark);
+                View vibrantLight = findViewById(R.id.vibrantLight);
+                View muted = findViewById(R.id.muted);
+                View mutedDark = findViewById(R.id.mutedDark);
+                View mutedLight = findViewById(R.id.mutedLight);
+                View dominant = findViewById(R.id.dominant);
+
+                vibrant.setBackgroundColor(updated.getVibrantColor(0));
+                vibrantDark.setBackgroundColor(updated.getDarkVibrantColor(0));
+                vibrantLight.setBackgroundColor(updated.getLightVibrantColor(0));
+                muted.setBackgroundColor(updated.getMutedColor(0));
+                mutedDark.setBackgroundColor(updated.getDarkMutedColor(0));
+                mutedLight.setBackgroundColor(updated.getLightMutedColor(0));
+                dominant.setBackgroundColor(updated.getDominantColor(0));
+
+                // Update views with color
+                int color = getColor(updated);
+
+                ConstraintLayout constraintLayout = findViewById(R.id.mainConstraintLayout);
+                constraintLayout.setBackgroundColor(color);
+            }
+        };
+
+        albumArtPalette.registerObserver(observer); // Register the observer
     }
 
     @Override
@@ -133,48 +167,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Updates the album art palette
-     *
-     * @param url The url of the album art image
-     */
-    private void updatePalette(String url) {
-        AlbumArtPalette albumArtPalette = new AlbumArtPalette();
-
-        PaletteObserver observer = new PaletteObserver() {
-            @Override
-            public void notifyObserver(Palette updated) {
-
-                // Update swatch
-                View vibrant = findViewById(R.id.vibrant);
-                View vibrantDark = findViewById(R.id.vibrantDark);
-                View vibrantLight = findViewById(R.id.vibrantLight);
-                View muted = findViewById(R.id.muted);
-                View mutedDark = findViewById(R.id.mutedDark);
-                View mutedLight = findViewById(R.id.mutedLight);
-                View dominant = findViewById(R.id.dominant);
-
-                vibrant.setBackgroundColor(updated.getVibrantColor(0));
-                vibrantDark.setBackgroundColor(updated.getDarkVibrantColor(0));
-                vibrantLight.setBackgroundColor(updated.getLightVibrantColor(0));
-                muted.setBackgroundColor(updated.getMutedColor(0));
-                mutedDark.setBackgroundColor(updated.getDarkMutedColor(0));
-                mutedLight.setBackgroundColor(updated.getLightMutedColor(0));
-                dominant.setBackgroundColor(updated.getDominantColor(0));
-
-                // Update views with color
-                int color = getColor(updated);
-
-                ConstraintLayout constraintLayout = findViewById(R.id.mainConstraintLayout);
-                constraintLayout.setBackgroundColor(color);
-            }
-        };
-
-        albumArtPalette.registerObserver(observer);
-
-        Picasso.get().load(url).into(albumArtPalette);
-    }
-
-    /**
      * Updates the album art display on the main page
      *
      * @param playerState The player state passed in from event updates
@@ -195,6 +187,6 @@ public class MainActivity extends AppCompatActivity {
         updateAlbumArt(playerState); // Update the album art
 
         String url = getImageURL(playerState);
-        updatePalette(url); // Update the palette
+        Picasso.get().load(url).into(albumArtPalette); // Update the palette
     }
 }
