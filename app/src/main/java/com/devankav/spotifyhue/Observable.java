@@ -1,3 +1,9 @@
+/**
+ * An abstract class that supports observers
+ *
+ * @author Devan Kavalchek
+ */
+
 package com.devankav.spotifyhue;
 
 import java.util.HashSet;

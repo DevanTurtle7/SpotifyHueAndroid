@@ -47,6 +47,7 @@ public class ConnectActivity extends Activity {
         ListView bridgeList = findViewById(R.id.bridgeSelection);
         bridgeList.setAdapter(adapter); // Set the lists adapter to the one created
 
+        // Create and register a new discovery observer
         discoveryResult.registerObserver(new DiscoveryObserver() {
             @Override
             public void notifyObserver(BridgeResult updated) {

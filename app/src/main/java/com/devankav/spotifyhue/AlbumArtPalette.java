@@ -1,3 +1,10 @@
+/**
+ * A target that can load bitmaps and generates palettes. Supports palette observers. Contains
+ * static functions for analyzing and converting colors.
+ *
+ * @author Devan Kavalchek
+ */
+
 package com.devankav.spotifyhue;
 
 import android.graphics.Bitmap;
@@ -8,9 +15,6 @@ import androidx.palette.graphics.Palette;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class AlbumArtPalette extends Observable<PaletteObserver> implements Target {
 
@@ -86,9 +90,13 @@ public class AlbumArtPalette extends Observable<PaletteObserver> implements Targ
         return result;
     }
 
+    /**
+     * Notifies all of the registered observers that an update has occurred
+     * @param palette The palette being updated
+     */
     public void notifyObservers(Palette palette) {
-        for (PaletteObserver observer : observers) {
-            observer.notifyObserver(palette);
+        for (PaletteObserver observer : observers) { // Iterate over each observer
+            observer.notifyObserver(palette); // Notify the observer
         }
     }
 

@@ -28,7 +28,7 @@ public class BridgeStatus extends Observable<BridgeStateObserver> {
 
     /**
      * A mutator for the current status
-     * @param bridgeState The new status
+     * @param bridgeState The new state of the bridge
      */
     public void updateState(BridgeState bridgeState) {
         this.bridgeState = bridgeState;
@@ -37,7 +37,7 @@ public class BridgeStatus extends Observable<BridgeStateObserver> {
 
     /**
      * Notifies all of the registered observers that an update has occurred
-     * @param bridgeState
+     * @param bridgeState The new state of the bridge
      */
     public void notifyObservers(BridgeState bridgeState) {
         for (BridgeStateObserver observer : observers) { // Iterate over each observer
