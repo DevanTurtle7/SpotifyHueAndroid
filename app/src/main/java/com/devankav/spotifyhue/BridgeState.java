@@ -36,20 +36,32 @@ public class BridgeState {
      */
     public void updateStatus(BridgeStatus bridgeStatus) {
         this.bridgeStatus = bridgeStatus;
-        notifyObservers(bridgeStatus);
+        notifyObservers(bridgeStatus); // Notify the observers of an update
     }
 
+    /**
+     * Registers an observer to be notified whenever there is an update
+     * @param observer The observer being registered
+     */
     public void registerObserver(BridgeStateObserver observer) {
         this.observers.add(observer);
     }
 
+    /**
+     * Deregisters an observer
+     * @param observer The observer being deregistered
+     */
     public void deregisterObserver(BridgeStateObserver observer) {
         this.observers.remove(observer);
     }
 
+    /**
+     * Notifies all of the registered observers that an update has occurred
+     * @param bridgeStatus
+     */
     public void notifyObservers(BridgeStatus bridgeStatus) {
-        for (BridgeStateObserver observer : observers) {
-            observer.BridgeStateUpdated(bridgeStatus);
+        for (BridgeStateObserver observer : observers) { // Iterate over each observer
+            observer.BridgeStateUpdated(bridgeStatus); // Notify the observer
         }
     }
 }

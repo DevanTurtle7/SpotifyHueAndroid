@@ -49,6 +49,7 @@ public class HueConnector {
      * Attempts to reconnect to a bridge that has previously been connected to
      * @param ip The IP address of the bridge
      * @param username The username used for the bridge
+     * @return The status of the bridge (whether or not it connected)
      */
     public BridgeState reconnect(String ip, String username) {
         return null;
