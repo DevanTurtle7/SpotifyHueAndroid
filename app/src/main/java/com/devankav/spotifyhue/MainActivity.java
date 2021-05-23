@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 dominant.setBackgroundColor(updated.getDominantColor(0));
 
                 // Update views with color
-                int color = getColor(updated);
+                int color = AlbumArtPalette.getColor(updated);
 
                 ConstraintLayout constraintLayout = findViewById(R.id.mainConstraintLayout);
                 constraintLayout.setBackgroundColor(color);
@@ -142,28 +142,6 @@ public class MainActivity extends AppCompatActivity {
         String url = IMAGE_PREFIX + imageCode; // Assemble the url
 
         return url;
-    }
-
-    /**
-     * Gets the most vibrant color from a given palette
-     *
-     * @param palette The palette being searched
-     * @return The most vibrant color in the palette
-     */
-    public int getColor(Palette palette) {
-        int color = palette.getVibrantColor(0);
-
-        if (color == 0) {
-            color = palette.getLightVibrantColor(0);
-        }
-        if (color == 0) {
-            color = palette.getDarkVibrantColor(0);
-        }
-        if (color == 0) {
-            color = palette.getDominantColor(0);
-        }
-
-        return color;
     }
 
     /**
