@@ -59,7 +59,7 @@ public class SplashScreenActivity extends Activity {
             HueConnector hueConnector = new HueConnector(this); // Create a new HueConnector instance
             BridgeState bridgeState = hueConnector.reconnect(recentIP, recentUsername); // Attempt to connect to the bridge
 
-            // Create a new bridge state observer
+            // Create and register a new bridge state observer
             bridgeState.registerObserver(new BridgeStateObserver() {
                 @Override
                 public void BridgeStateUpdated(BridgeStatus bridgeStatus) {
