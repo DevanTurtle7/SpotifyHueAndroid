@@ -57,16 +57,16 @@ public class SplashScreenActivity extends Activity {
 
         if (recentIP != null && recentUsername != null) { // Check if the previous info exists
             HueConnector hueConnector = new HueConnector(this); // Create a new HueConnector instance
-            BridgeState bridgeState = hueConnector.reconnect(recentIP, recentUsername); // Attempt to connect to the bridge
+            BridgeStatus bridgeState = hueConnector.reconnect(recentIP, recentUsername); // Attempt to connect to the bridge
 
             // Create and register a new bridge state observer
             bridgeState.registerObserver(new BridgeStateObserver() {
                 @Override
-                public void BridgeStateUpdated(BridgeStatus bridgeStatus) {
+                public void BridgeStateUpdated(BridgeState bridgeState) {
                     // Navigate to the home page if the bridge was connected. Navigate to the connect page otherwise.
                     Intent intent = new Intent(
                             SplashScreenActivity.this,
-                            bridgeStatus == BridgeStatus.CONNECTED ? MainActivity.class : ConnectActivity.class
+                            bridgeState == BridgeState.CONNECTED ? MainActivity.class : ConnectActivity.class
                     );
 
                     exitSplashScreen(intent, startTime); // Exit the splash screen

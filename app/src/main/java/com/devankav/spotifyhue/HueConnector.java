@@ -51,7 +51,7 @@ public class HueConnector {
      * @param username The username used for the bridge
      * @return The status of the bridge (whether or not it connected)
      */
-    public BridgeState reconnect(String ip, String username) {
+    public BridgeStatus reconnect(String ip, String username) {
         return null;
     }
 
@@ -60,8 +60,8 @@ public class HueConnector {
      * @param ip The IP address of the bridge
      * @return The status of the bridge (whether or not it connected)
      */
-    public BridgeState connect(String ip) {
-        final BridgeState result = new BridgeState(); // Initialize the bridge state result
+    public BridgeStatus connect(String ip) {
+        final BridgeStatus result = new BridgeStatus(); // Initialize the bridge state result
 
         // Create a new response listener
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
@@ -72,16 +72,16 @@ public class HueConnector {
 
                     if (body.get("error") != null) { // Check if there was an error
                         // TODO: Add if statements for errors
-                        result.updateStatus(BridgeStatus.LINK_BUTTON_NOT_PRESSED);
+                        result.updateState(BridgeState.LINK_BUTTON_NOT_PRESSED);
                     } else {
-                        result.updateStatus(BridgeStatus.CONNECTED);
+                        result.updateState(BridgeState.CONNECTED);
 
                         // Save the bridge information in shared preferences
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         // TODO: Write bridge info to shared prefs
                     }
                 } catch (JSONException e) {
-                    result.updateStatus(BridgeStatus.FAILED_TO_CONNECT);
+                    result.updateState(BridgeState.FAILED_TO_CONNECT);
 
                     if (e.getMessage() != null) {
                         Log.e("HueConnector", e.getMessage());
@@ -96,7 +96,7 @@ public class HueConnector {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                result.updateStatus(BridgeStatus.FAILED_TO_CONNECT);
+                result.updateState(BridgeState.FAILED_TO_CONNECT);
 
                 // Print the error message
                 if (error.getMessage() != null) {
@@ -120,7 +120,7 @@ public class HueConnector {
 
             queue.getRequestQueue().add(jsonRequest); // Make the JSON call
         } catch (JSONException e) {
-            result.updateStatus(BridgeStatus.FAILED_TO_CONNECT);
+            result.updateState(BridgeState.FAILED_TO_CONNECT);
 
             if (e.getMessage() != null) {
                 Log.e("HueConnector", e.getMessage());
