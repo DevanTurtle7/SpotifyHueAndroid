@@ -1,4 +1,4 @@
-package com.devankav.spotifyhue;
+package com.devankav.spotifyhue.bridgeConnection;
 
 public class BridgeResult {
 

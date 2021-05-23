@@ -9,16 +9,17 @@ package com.devankav.spotifyhue;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.devankav.spotifyhue.bridgeConnection.BridgeResult;
+import com.devankav.spotifyhue.bridgeConnection.DiscoveryObserver;
+import com.devankav.spotifyhue.bridgeConnection.DiscoveryResult;
+import com.devankav.spotifyhue.bridgeConnection.HueConnector;
+
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class ConnectActivity extends Activity {
 

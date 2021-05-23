@@ -4,7 +4,9 @@
  * @author Devan Kavalchek
  */
 
-package com.devankav.spotifyhue;
+package com.devankav.spotifyhue.bridgeConnection;
+
+import com.devankav.spotifyhue.Observer;
 
 public interface BridgeStateObserver extends Observer<BridgeState> {
 }

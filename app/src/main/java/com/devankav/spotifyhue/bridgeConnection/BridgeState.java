@@ -3,7 +3,7 @@
  *
  * @author Devan Kavalchek
  */
-package com.devankav.spotifyhue;
+package com.devankav.spotifyhue.bridgeConnection;
 
 public enum BridgeState {
     LINK_BUTTON_NOT_PRESSED, // The link button needs to be pushed to complete the connection

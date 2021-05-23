@@ -1,4 +1,6 @@
-package com.devankav.spotifyhue;
+package com.devankav.spotifyhue.bridgeConnection;
+
+import com.devankav.spotifyhue.Observable;
 
 import java.util.HashSet;
 import java.util.Set;

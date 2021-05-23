@@ -4,28 +4,23 @@
  * @author Devan Kavalchek
  */
 
-package com.devankav.spotifyhue;
+package com.devankav.spotifyhue.bridgeConnection;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-
-import androidx.annotation.Nullable;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.devankav.spotifyhue.requests.GlobalRequestQueue;
+import com.devankav.spotifyhue.requests.JsonArrayBodyRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class HueConnector {
 

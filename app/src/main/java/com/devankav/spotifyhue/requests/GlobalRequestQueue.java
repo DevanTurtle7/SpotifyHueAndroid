@@ -4,7 +4,7 @@
  * @author Devan Kavalchek
  */
 
-package com.devankav.spotifyhue;
+package com.devankav.spotifyhue.requests;
 
 import android.content.Context;
 

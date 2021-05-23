@@ -4,7 +4,7 @@
  * @author Devan Kavalchek
  */
 
-package com.devankav.spotifyhue;
+package com.devankav.spotifyhue.credentials;
 
 public class SpotifyCredentials {
     public static final String CLIENT_ID = "d65cc0ee06034ea6aabec30bd2ec484d";

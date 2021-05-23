@@ -4,10 +4,9 @@
  * @author Devan Kavalchek
  */
 
-package com.devankav.spotifyhue;
+package com.devankav.spotifyhue.bridgeConnection;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.devankav.spotifyhue.Observable;
 
 public class BridgeStatus extends Observable<BridgeStateObserver> {
     private BridgeState bridgeState;

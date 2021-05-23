@@ -14,6 +14,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.devankav.spotifyhue.bridgeConnection.BridgeState;
+import com.devankav.spotifyhue.bridgeConnection.BridgeStateObserver;
+import com.devankav.spotifyhue.bridgeConnection.BridgeStatus;
+import com.devankav.spotifyhue.bridgeConnection.HueConnector;
+
 public class SplashScreenActivity extends Activity {
 
     public static final int SPLASH_SCREEN_LENGTH = 2000; // The length of the splash screen (in milliseconds)
