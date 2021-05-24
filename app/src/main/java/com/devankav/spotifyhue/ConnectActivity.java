@@ -9,7 +9,9 @@ package com.devankav.spotifyhue;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -22,6 +24,8 @@ import com.devankav.spotifyhue.bridgeConnection.HueConnector;
 import java.util.ArrayList;
 
 public class ConnectActivity extends Activity {
+
+    private boolean connecting = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +46,8 @@ public class ConnectActivity extends Activity {
         HueConnector connector = new HueConnector(this); // Create a new connector instance
         DiscoveryResult discoveryResult = connector.getAllBridges(); // Get all the available bridges on the network and update the list with them
 
-        ArrayList<String> bridges = new ArrayList<>(); // Create a new list
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, bridges); // Create a new array adapter to update the list view
+        ArrayList<BridgeResult> bridges = new ArrayList<>(); // Create a new list
+        ArrayAdapter<BridgeResult> adapter = new ArrayAdapter<BridgeResult>(this, android.R.layout.simple_list_item_1, bridges); // Create a new array adapter to update the list view
         ListView bridgeList = findViewById(R.id.bridgeSelection);
         bridgeList.setAdapter(adapter); // Set the lists adapter to the one created
 
@@ -51,8 +55,19 @@ public class ConnectActivity extends Activity {
         discoveryResult.registerObserver(new DiscoveryObserver() {
             @Override
             public void notifyObserver(BridgeResult updated) {
-                bridges.add(updated.getIpAddress()); // Add the bridge to the list
+                bridges.add(updated); // Add the bridge to the list
                 adapter.notifyDataSetChanged(); // Notify the adapter
+            }
+        });
+
+        bridgeList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (!connecting) {
+                    //connecting = true;
+                    BridgeResult bridge = bridges.get(i);
+                    connector.connect(bridge.getIpAddress());
+                }
             }
         });
     }

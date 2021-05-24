@@ -36,4 +36,9 @@ public class BridgeResult {
     public String getIpAddress() {
         return this.ipAddress;
     }
+
+    @Override
+    public String toString() {
+        return getIpAddress();
+    }
 }

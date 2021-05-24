@@ -65,6 +65,8 @@ public class HueConnector {
                 try {
                     JSONObject body = response.getJSONObject(0); // Get the object that was returned
 
+                    Log.d("HueConnector", body.toString());
+
                     if (body.get("error") != null) { // Check if there was an error
                         // TODO: Add if statements for errors
                         result.updateState(BridgeState.LINK_BUTTON_NOT_PRESSED);
