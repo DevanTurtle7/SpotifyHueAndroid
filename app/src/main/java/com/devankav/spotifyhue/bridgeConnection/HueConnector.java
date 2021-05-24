@@ -67,15 +67,20 @@ public class HueConnector {
 
                     Log.d("HueConnector", body.toString());
 
-                    if (body.get("error") != null) { // Check if there was an error
+                    if (body.has("error")) { // Check if there was an error
                         // TODO: Add if statements for errors
                         result.updateState(BridgeState.LINK_BUTTON_NOT_PRESSED);
-                    } else {
+                    } else if (body.has("success")) {
+                        String username = body.getJSONObject("success").getString("username");
+
+                        result.updateUsername(username); // Update the username
                         result.updateState(BridgeState.CONNECTED);
 
                         // Save the bridge information in shared preferences
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         // TODO: Write bridge info to shared prefs
+                    } else {
+                        Log.e("HueConnector", "There was an unexpected response: " + body.toString());
                     }
                 } catch (JSONException e) {
                     result.updateState(BridgeState.FAILED_TO_CONNECT);
