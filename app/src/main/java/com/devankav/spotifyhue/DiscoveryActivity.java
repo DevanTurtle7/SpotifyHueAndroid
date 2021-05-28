@@ -9,7 +9,6 @@ package com.devankav.spotifyhue;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,7 +22,7 @@ import com.devankav.spotifyhue.bridgeConnection.HueConnector;
 
 import java.util.ArrayList;
 
-public class ConnectActivity extends Activity {
+public class DiscoveryActivity extends Activity {
 
     private boolean connecting = false;
 
@@ -38,7 +37,7 @@ public class ConnectActivity extends Activity {
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ConnectActivity.this, MainActivity.class);
+                Intent intent = new Intent(DiscoveryActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });

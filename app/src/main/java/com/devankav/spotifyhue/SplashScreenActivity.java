@@ -71,14 +71,14 @@ public class SplashScreenActivity extends Activity {
                     // Navigate to the home page if the bridge was connected. Navigate to the connect page otherwise.
                     Intent intent = new Intent(
                             SplashScreenActivity.this,
-                            bridgeState == BridgeState.CONNECTED ? MainActivity.class : ConnectActivity.class
+                            bridgeState == BridgeState.CONNECTED ? MainActivity.class : DiscoveryActivity.class
                     );
 
                     exitSplashScreen(intent, startTime); // Exit the splash screen
                 }
             });
         } else {
-            Intent intent = new Intent(SplashScreenActivity.this, ConnectActivity.class);
+            Intent intent = new Intent(SplashScreenActivity.this, DiscoveryActivity.class);
             exitSplashScreen(intent, startTime); // Exit the splash screen
         }
     }
