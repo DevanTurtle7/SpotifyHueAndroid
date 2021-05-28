@@ -30,7 +30,7 @@ public class DiscoveryActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_connect);
+        setContentView(R.layout.activity_discovery);
 
         // Button for testing
         Button switchButton = findViewById(R.id.switchButton);
@@ -65,7 +65,13 @@ public class DiscoveryActivity extends Activity {
                 if (!connecting) {
                     //connecting = true;
                     BridgeResult bridge = bridges.get(i);
+
+                    /*
                     connector.connect(bridge.getIpAddress());
+                     */
+                    Intent intent = new Intent(DiscoveryActivity.this, ConnectActivity.class);
+                    intent.putExtra("ipAddress", bridge.getIpAddress());
+                    startActivity(intent);
                 }
             }
         });
