@@ -134,6 +134,10 @@ public class HueConnector {
         return result;
     }
 
+    /**
+     * Gets a list of all available bridges on the network
+     * @return A bridge result containing all of the bridges on the network
+     */
     public DiscoveryResult getAllBridges() {
         final DiscoveryResult discoveryResult = new DiscoveryResult();
 
