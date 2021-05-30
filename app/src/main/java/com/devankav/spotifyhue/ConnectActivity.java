@@ -2,6 +2,7 @@ package com.devankav.spotifyhue;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.devankav.spotifyhue.bridgeConnection.BridgeState;
@@ -24,10 +25,12 @@ public class ConnectActivity extends Activity {
 
         HueConnector connector = new HueConnector(this);
         BridgeStatus bridgeStatus = connector.connect(ipAddress);
-        bridgeStatus.registerObserver(new BridgeStateObserver() {
-            @Override
-            public void notifyObserver(BridgeState updated) {
-                
+        bridgeStatus.registerObserver(updated -> {
+            if (bridgeStatus.getState() != BridgeState.CONNECTED) {
+                Log.d("ConnectActivity", bridgeStatus.getState().toString());
+                connector.connect(ipAddress, bridgeStatus);
+            } else {
+                Log.d("ConnectActivity", "connected! Username: " + bridgeStatus.getUsername());
             }
         });
     }

@@ -11,6 +11,8 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -55,8 +57,8 @@ public class HueConnector {
      * @param ip The IP address of the bridge
      * @return The status of the bridge (whether or not it connected)
      */
-    public BridgeStatus connect(String ip) {
-        final BridgeStatus result = new BridgeStatus(); // Initialize the bridge state result
+    public BridgeStatus connect(String ip, @Nullable BridgeStatus bridgeStatus) {
+        final BridgeStatus result = bridgeStatus == null ? new BridgeStatus() : bridgeStatus; // Initialize the bridge state result
 
         // Create a new response listener
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
@@ -132,6 +134,10 @@ public class HueConnector {
         }
 
         return result;
+    }
+
+    public BridgeStatus connect(String ip) {
+        return connect(ip, null);
     }
 
     /**
