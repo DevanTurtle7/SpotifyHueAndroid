@@ -34,7 +34,6 @@ public class ConnectActivity extends Activity {
         HueConnector connector = new HueConnector(this);
         BridgeStatus bridgeStatus = connector.connect(ipAddress);
         bridgeStatus.registerObserver(updated -> {
-
             if (running) {
                 long currentTime = System.currentTimeMillis(); // Get the current time
                 long timeDiff = currentTime - startTime;
