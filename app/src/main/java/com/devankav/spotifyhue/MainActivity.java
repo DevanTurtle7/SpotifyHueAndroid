@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String CLIENT_ID = "d65cc0ee06034ea6aabec30bd2ec484d";
     private static final String REDIRECT_URI = "https://devanturtle7.github.io/SpotifyRedirect/";
-    private static final String IMAGE_PREFIX = "https://i.scdn.co/image/";
 
     private SpotifyAppRemote appRemote;
     private AlbumArtPalette albumArtPalette;
@@ -123,30 +122,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Returns the URL of the album art of the current playing song
-     *
-     * @param playerState The player state, given by the player api
-     * @return A URL to the album art of the current song on spotify
-     */
-    private String getImageURL(PlayerState playerState) {
-        ImageUri imageUri = playerState.track.imageUri; // Get the image uri from the player state
-        String[] tokens = imageUri.toString().split(":"); // Split the uri on colons
-        String endingCode = tokens[tokens.length - 1]; // Get the last token
-        tokens = endingCode.split("'"); // Strip the end of the uri off
-        String imageCode = tokens[0];
-        String url = IMAGE_PREFIX + imageCode; // Assemble the url
-
-        return url;
-    }
-
-    /**
      * Updates the album art display on the main page
      *
      * @param playerState The player state passed in from event updates
      */
     private void updateAlbumArt(PlayerState playerState) {
         ImageView albumArtView = findViewById(R.id.albumArt); // Get the ImageView
-        String url = getImageURL(playerState); // Get the image url
+        String url = StateParser.getImageURL(playerState); // Get the image url
 
         Picasso.get().load(url).into(albumArtView); // Update the image image view
     }
@@ -159,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
     private void playerStateUpdated(PlayerState playerState) {
         updateAlbumArt(playerState); // Update the album art
 
-        String url = getImageURL(playerState);
+        String url = StateParser.getImageURL(playerState);
         Picasso.get().load(url).into(albumArtPalette); // Update the palette
     }
 }

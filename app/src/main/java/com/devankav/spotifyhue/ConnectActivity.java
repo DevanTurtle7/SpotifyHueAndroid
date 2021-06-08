@@ -40,7 +40,6 @@ public class ConnectActivity extends Activity {
 
                 if (timeDiff < WAIT_TIME) {
                     if (bridgeStatus.getState() != BridgeState.CONNECTED) {
-                        Log.d("ConnectActivity", bridgeStatus.getState().toString());
                         connector.connect(ipAddress, bridgeStatus);
                     } else {
                         Log.d("ConnectActivity", "connected! Username: " + bridgeStatus.getUsername());
