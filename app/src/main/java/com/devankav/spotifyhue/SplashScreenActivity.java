@@ -14,10 +14,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 import com.devankav.spotifyhue.bridgeConnection.BridgeState;
 import com.devankav.spotifyhue.bridgeConnection.BridgeStateObserver;
 import com.devankav.spotifyhue.bridgeConnection.BridgeStatus;
-import com.devankav.spotifyhue.bridgeConnection.HueConnector;
 
 public class SplashScreenActivity extends Activity {
 
@@ -61,8 +61,8 @@ public class SplashScreenActivity extends Activity {
         String recentUsername = sharedPreferences.getString("recentUsername", null);
 
         if (recentIP != null && recentUsername != null) { // Check if the previous info exists
-            HueConnector hueConnector = new HueConnector(this); // Create a new HueConnector instance
-            BridgeStatus bridgeState = hueConnector.reconnect(recentIP, recentUsername); // Attempt to connect to the bridge
+            BridgeConnector bridgeConnector = new BridgeConnector(this); // Create a new BridgeConnector instance
+            BridgeStatus bridgeState = bridgeConnector.reconnect(recentIP, recentUsername); // Attempt to connect to the bridge
 
             // Create and register a new bridge state observer
             bridgeState.registerObserver(new BridgeStateObserver() {

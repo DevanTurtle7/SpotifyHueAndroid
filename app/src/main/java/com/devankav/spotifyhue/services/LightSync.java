@@ -14,7 +14,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.devankav.spotifyhue.bridgeConnection.HueConnector;
+import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 import com.devankav.spotifyhue.credentials.SpotifyCredentials;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
@@ -23,7 +23,7 @@ import com.spotify.protocol.types.PlayerState;
 
 public class LightSync extends Service {
 
-    private HueConnector connector;
+    private BridgeConnector connector;
     private SpotifyAppRemote appRemote;
 
     /**
@@ -54,8 +54,6 @@ public class LightSync extends Service {
         SpotifyAppRemote.connect(this, connectionParams, new Connector.ConnectionListener() {
             @Override
             public void onConnected(SpotifyAppRemote spotifyAppRemote) {
-                HueConnector connector = new HueConnector(getApplicationContext()); // Create a new hue connector
-
                 appRemote = spotifyAppRemote;
                 appRemote.getPlayerApi().subscribeToPlayerState().setEventCallback(LightSync.this::playerStateUpdated);
                 Log.d("LightSync", "Connected! Yay!");

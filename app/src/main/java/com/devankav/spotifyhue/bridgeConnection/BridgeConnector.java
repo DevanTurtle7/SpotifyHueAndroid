@@ -24,7 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class HueConnector {
+public class BridgeConnector {
 
     public static final String PREFIX = "http://";
     public static final String SUFFIX = "/api";
@@ -37,7 +37,7 @@ public class HueConnector {
      * The constructor
      * @param context The application context. Used to make JSON requests and access shared preferences
      */
-    public HueConnector(Context context) {
+    public BridgeConnector(Context context) {
         this.queue = new GlobalRequestQueue(context); // Create a new instance of the request queue
         this.sharedPreferences = context.getSharedPreferences("bridgeMem", Context.MODE_PRIVATE); // Get the shared preferences instance
     }
@@ -67,7 +67,7 @@ public class HueConnector {
                 try {
                     JSONObject body = response.getJSONObject(0); // Get the object that was returned
 
-                    Log.d("HueConnector", body.toString());
+                    Log.d("BridgeConnector", body.toString());
 
                     if (body.has("error")) { // Check if there was an error
                         // TODO: Add if statements for errors
@@ -82,15 +82,15 @@ public class HueConnector {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         // TODO: Write bridge info to shared prefs
                     } else {
-                        Log.e("HueConnector", "There was an unexpected response: " + body.toString());
+                        Log.e("BridgeConnector", "There was an unexpected response: " + body.toString());
                     }
                 } catch (JSONException e) {
                     result.updateState(BridgeState.FAILED_TO_CONNECT);
 
                     if (e.getMessage() != null) {
-                        Log.e("HueConnector", e.getMessage());
+                        Log.e("BridgeConnector", e.getMessage());
                     } else {
-                        Log.e("HueConnector", "There was an unknown error while trying to connect.");
+                        Log.e("BridgeConnector", "There was an unknown error while trying to connect.");
                     }
                 }
             }
@@ -104,9 +104,9 @@ public class HueConnector {
 
                 // Print the error message
                 if (error.getMessage() != null) {
-                    Log.e("HueConnector", error.getMessage());
+                    Log.e("BridgeConnector", error.getMessage());
                 } else {
-                    Log.e("HueConnector", "There was an unknown error getting all bridges.");
+                    Log.e("BridgeConnector", "There was an unknown error getting all bridges.");
                 }
             }
         };
@@ -127,9 +127,9 @@ public class HueConnector {
             result.updateState(BridgeState.FAILED_TO_CONNECT);
 
             if (e.getMessage() != null) {
-                Log.e("HueConnector", e.getMessage());
+                Log.e("BridgeConnector", e.getMessage());
             } else {
-                Log.e("HueConnector", "There was an unknown error");
+                Log.e("BridgeConnector", "There was an unknown error");
             }
         }
 
@@ -161,9 +161,9 @@ public class HueConnector {
                         discoveryResult.addBridge(bridgeResult); // Add the bridge to the results
                     } catch (JSONException e) {
                         if (e.getMessage() != null) {
-                            Log.e("HueConnector", e.getMessage());
+                            Log.e("BridgeConnector", e.getMessage());
                         } else {
-                            Log.e("HueConnector", "There was an unexpected error while getting all bridges");
+                            Log.e("BridgeConnector", "There was an unexpected error while getting all bridges");
                         }
                     }
                 }
@@ -175,9 +175,9 @@ public class HueConnector {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error.getMessage() != null) {
-                    Log.e("HueConnector", error.getMessage());
+                    Log.e("BridgeConnector", error.getMessage());
                 } else {
-                    Log.e("HueConnector", "There was an unknown error getting all bridges.");
+                    Log.e("BridgeConnector", "There was an unknown error getting all bridges.");
                 }
             }
         };

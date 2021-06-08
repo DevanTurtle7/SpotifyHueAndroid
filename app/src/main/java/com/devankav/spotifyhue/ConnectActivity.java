@@ -7,9 +7,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.devankav.spotifyhue.bridgeConnection.BridgeState;
-import com.devankav.spotifyhue.bridgeConnection.BridgeStateObserver;
 import com.devankav.spotifyhue.bridgeConnection.BridgeStatus;
-import com.devankav.spotifyhue.bridgeConnection.HueConnector;
+import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 
 public class ConnectActivity extends Activity {
 
@@ -31,7 +30,7 @@ public class ConnectActivity extends Activity {
 
         long startTime = System.currentTimeMillis(); // Get the current time
 
-        HueConnector connector = new HueConnector(this);
+        BridgeConnector connector = new BridgeConnector(this);
         BridgeStatus bridgeStatus = connector.connect(ipAddress);
         bridgeStatus.registerObserver(updated -> {
             if (running) {

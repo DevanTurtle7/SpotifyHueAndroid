@@ -15,10 +15,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 import com.devankav.spotifyhue.bridgeConnection.BridgeResult;
 import com.devankav.spotifyhue.bridgeConnection.DiscoveryObserver;
 import com.devankav.spotifyhue.bridgeConnection.DiscoveryResult;
-import com.devankav.spotifyhue.bridgeConnection.HueConnector;
 
 import java.util.ArrayList;
 
@@ -42,7 +42,7 @@ public class DiscoveryActivity extends Activity {
             }
         });
 
-        HueConnector connector = new HueConnector(this); // Create a new connector instance
+        BridgeConnector connector = new BridgeConnector(this); // Create a new connector instance
         DiscoveryResult discoveryResult = connector.getAllBridges(); // Get all the available bridges on the network and update the list with them
 
         ArrayList<BridgeResult> bridges = new ArrayList<>(); // Create a new list
