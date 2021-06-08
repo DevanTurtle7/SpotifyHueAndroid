@@ -71,6 +71,7 @@ public class DiscoveryActivity extends Activity {
                      */
                     Intent intent = new Intent(DiscoveryActivity.this, ConnectActivity.class);
                     intent.putExtra("ipAddress", bridge.getIpAddress());
+                    intent.putExtra("id", bridge.getId());
                     startActivity(intent);
                 }
             }

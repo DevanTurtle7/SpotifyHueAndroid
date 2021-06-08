@@ -69,6 +69,7 @@ public class SplashScreenActivity extends Activity {
                 @Override
                 public void notifyObserver(BridgeState bridgeState) {
                     // Navigate to the home page if the bridge was connected. Navigate to the connect page otherwise.
+                    // TODO: If navigating to main, add extras into bundle (ip address, id, username)
                     Intent intent = new Intent(
                             SplashScreenActivity.this,
                             bridgeState == BridgeState.CONNECTED ? MainActivity.class : DiscoveryActivity.class

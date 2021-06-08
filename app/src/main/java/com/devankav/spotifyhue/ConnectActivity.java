@@ -1,6 +1,7 @@
 package com.devankav.spotifyhue;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ProgressBar;
@@ -24,6 +25,7 @@ public class ConnectActivity extends Activity {
 
         Bundle bundle = getIntent().getExtras();
         String ipAddress = bundle.getString("ipAddress");
+        String id = bundle.getString("id");
 
         TextView textView = findViewById(R.id.ipLabel);
         textView.setText(ipAddress);
@@ -32,6 +34,8 @@ public class ConnectActivity extends Activity {
 
         BridgeConnector connector = new BridgeConnector(this);
         BridgeStatus bridgeStatus = connector.connect(ipAddress);
+
+        // TODO: Optimize with scheduler
         bridgeStatus.registerObserver(updated -> {
             if (running) {
                 long currentTime = System.currentTimeMillis(); // Get the current time
@@ -41,7 +45,14 @@ public class ConnectActivity extends Activity {
                     if (bridgeStatus.getState() != BridgeState.CONNECTED) {
                         connector.connect(ipAddress, bridgeStatus);
                     } else {
+                        // TODO: Update shared prefs
                         Log.d("ConnectActivity", "connected! Username: " + bridgeStatus.getUsername());
+
+                        Intent intent = new Intent(ConnectActivity.this, MainActivity.class);
+                        intent.putExtra("ipAddress", ipAddress);
+                        intent.putExtra("id", id);
+                        intent.putExtra("username", bridgeStatus.getUsername());
+                        startActivity(intent);
                     }
                 } else {
                     this.finish();

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.palette.graphics.Palette;
 
+import com.devankav.spotifyhue.bridgeConnection.Bridge;
 import com.devankav.spotifyhue.credentials.SpotifyCredentials;
 import com.devankav.spotifyhue.observers.PaletteObserver;
 import com.devankav.spotifyhue.services.LightSync;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SpotifyAppRemote appRemote;
     private AlbumArtPalette albumArtPalette;
+    private Bridge bridge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        Bundle bundle = getIntent().getExtras();
+        String ipAddress = bundle.getString("ipAddress");
+        String id = bundle.getString("id");
+        String username = bundle.getString("username");
+
+        bridge = new Bridge(ipAddress, id, username);
 
         // Setup the connection parameters for the spotify remote
         ConnectionParams connectionParams = new ConnectionParams
