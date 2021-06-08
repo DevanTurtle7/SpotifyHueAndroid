@@ -6,7 +6,8 @@
 
 package com.devankav.spotifyhue.bridgeConnection;
 
-import com.devankav.spotifyhue.Observable;
+import com.devankav.spotifyhue.observers.BridgeStateObserver;
+import com.devankav.spotifyhue.observers.Observable;
 
 public class BridgeStatus extends Observable<BridgeStateObserver> {
 

@@ -7,7 +7,8 @@
 
 package com.devankav.spotifyhue.bridgeConnection;
 
-import com.devankav.spotifyhue.Observable;
+import com.devankav.spotifyhue.observers.DiscoveryObserver;
+import com.devankav.spotifyhue.observers.Observable;
 
 import java.util.HashSet;
 import java.util.Set;

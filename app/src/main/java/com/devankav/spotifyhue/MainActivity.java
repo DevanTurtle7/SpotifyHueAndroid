@@ -9,11 +9,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.palette.graphics.Palette;
 
 import com.devankav.spotifyhue.credentials.SpotifyCredentials;
+import com.devankav.spotifyhue.observers.PaletteObserver;
 import com.devankav.spotifyhue.services.LightSync;
+import com.devankav.spotifyhue.spotifyHelpers.StateParser;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
-import com.spotify.protocol.types.ImageUri;
 import com.spotify.protocol.types.PlayerState;
 import com.squareup.picasso.Picasso;
 

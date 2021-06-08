@@ -4,7 +4,7 @@
  * @author Devan Kavalchek
  */
 
-package com.devankav.spotifyhue;
+package com.devankav.spotifyhue.observers;
 
 public interface Observer<T> {
     public abstract void notifyObserver(T updated);

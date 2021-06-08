@@ -4,7 +4,7 @@
  *
  * @author Devan Kavalchek
  */
-package com.devankav.spotifyhue;
+package com.devankav.spotifyhue.spotifyHelpers;
 
 import com.spotify.protocol.types.ImageUri;
 import com.spotify.protocol.types.PlayerState;

@@ -4,9 +4,10 @@
  * @author Devan Kavalchek
  */
 
-package com.devankav.spotifyhue.bridgeConnection;
+package com.devankav.spotifyhue.observers;
 
-import com.devankav.spotifyhue.Observer;
+import com.devankav.spotifyhue.bridgeConnection.BridgeResult;
+import com.devankav.spotifyhue.observers.Observer;
 
 public interface DiscoveryObserver extends Observer<BridgeResult> {
 }

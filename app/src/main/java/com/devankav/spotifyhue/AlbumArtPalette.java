@@ -13,6 +13,8 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.Nullable;
 import androidx.palette.graphics.Palette;
 
+import com.devankav.spotifyhue.observers.Observable;
+import com.devankav.spotifyhue.observers.PaletteObserver;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 

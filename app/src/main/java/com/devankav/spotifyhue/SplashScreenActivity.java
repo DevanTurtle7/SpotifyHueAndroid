@@ -16,7 +16,7 @@ import android.os.Handler;
 
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 import com.devankav.spotifyhue.bridgeConnection.BridgeState;
-import com.devankav.spotifyhue.bridgeConnection.BridgeStateObserver;
+import com.devankav.spotifyhue.observers.BridgeStateObserver;
 import com.devankav.spotifyhue.bridgeConnection.BridgeStatus;
 
 public class SplashScreenActivity extends Activity {

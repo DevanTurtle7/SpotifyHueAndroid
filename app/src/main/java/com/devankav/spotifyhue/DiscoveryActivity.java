@@ -17,7 +17,7 @@ import android.widget.ListView;
 
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 import com.devankav.spotifyhue.bridgeConnection.BridgeResult;
-import com.devankav.spotifyhue.bridgeConnection.DiscoveryObserver;
+import com.devankav.spotifyhue.observers.DiscoveryObserver;
 import com.devankav.spotifyhue.bridgeConnection.DiscoveryResult;
 
 import java.util.ArrayList;
