@@ -9,11 +9,13 @@ package com.devankav.spotifyhue.services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.devankav.spotifyhue.bridgeConnection.Bridge;
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 import com.devankav.spotifyhue.credentials.SpotifyCredentials;
 import com.spotify.android.appremote.api.ConnectionParams;
@@ -43,6 +45,12 @@ public class LightSync extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Bundle bundle = intent.getExtras();
+        String ipAddress = bundle.getString("ipAddress");
+        String id = bundle.getString("id");
+        String username = bundle.getString("username");
+
+        Bridge bridge = new Bridge(ipAddress, id, username);
 
         // Setup the connection parameters for the spotify remote
         ConnectionParams connectionParams = new ConnectionParams

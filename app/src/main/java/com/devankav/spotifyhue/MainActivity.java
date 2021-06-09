@@ -38,7 +38,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startService(new Intent(this, LightSync.class)); // Start the background service
+
+        Bundle bundle = getIntent().getExtras();
+        String ipAddress = bundle.getString("ipAddress");
+        String id = bundle.getString("id");
+        String username = bundle.getString("username");
+
+        Intent intent = new Intent(this, LightSync.class);
+
+        intent.putExtra("ipAddress", ipAddress);
+        intent.putExtra("id", id);
+        intent.putExtra("username", username);
+
+        startService(intent); // Start the background service
 
         setContentView(R.layout.activity_main);
 
@@ -60,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
         String ipAddress = bundle.getString("ipAddress");
         String id = bundle.getString("id");
         String username = bundle.getString("username");
-
-        bridge = new Bridge(ipAddress, id, username);
 
         // Setup the connection parameters for the spotify remote
         ConnectionParams connectionParams = new ConnectionParams

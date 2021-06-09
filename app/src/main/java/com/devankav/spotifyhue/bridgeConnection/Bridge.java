@@ -7,6 +7,7 @@ public class Bridge {
     private String ipAddress;
     private String id;
     private String username;
+    private String url;
 
     /**
      * The constructor
@@ -18,6 +19,8 @@ public class Bridge {
         this.ipAddress = ipAddress;
         this.id = id;
         this.username = username;
+
+        url = "http://" + ipAddress + "/api/" + username;
     }
 
     public String getIpAddress() {

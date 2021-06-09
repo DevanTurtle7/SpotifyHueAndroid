@@ -26,6 +26,8 @@ import org.json.JSONObject;
 
 public class BridgeConnector {
 
+    //TODO: Refactor to use listeners instead of observers
+
     public static final String PREFIX = "http://";
     public static final String SUFFIX = "/api";
     public static final String DISCOVERY_URL = "https://discovery.meethue.com";
