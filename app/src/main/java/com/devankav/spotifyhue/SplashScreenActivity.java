@@ -17,8 +17,10 @@ import android.util.Log;
 
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 import com.devankav.spotifyhue.bridgeConnection.BridgeState;
+import com.devankav.spotifyhue.bridgeConnection.BridgeStatusListenable;
+import com.devankav.spotifyhue.listeners.BridgeStateListener;
 import com.devankav.spotifyhue.observers.BridgeStateObserver;
-import com.devankav.spotifyhue.bridgeConnection.BridgeStatus;
+import com.devankav.spotifyhue.bridgeConnection.BridgeStatusObservable;
 
 public class SplashScreenActivity extends Activity {
 
@@ -69,14 +71,14 @@ public class SplashScreenActivity extends Activity {
 
         if (ipAddress != null && username != null && id != null) { // Check if the previous info exists
             BridgeConnector bridgeConnector = new BridgeConnector(this); // Create a new BridgeConnector instance
-            BridgeStatus bridgeState = bridgeConnector.reconnect(ipAddress, username); // Attempt to connect to the bridge
+            BridgeStatusListenable bridgeState = bridgeConnector.reconnect(ipAddress, username); // Attempt to connect to the bridge
 
             // Create and register a new bridge state observer
-            bridgeState.registerObserver(new BridgeStateObserver() {
+            bridgeState.registerListener(new BridgeStateListener() {
                 @Override
-                public void notifyObserver(BridgeState bridgeState) {
+                public void finished(BridgeState result) {
                     // Navigate to the home page if the bridge was connected. Navigate to the connect page otherwise.
-                    boolean connected = bridgeState == BridgeState.CONNECTED;
+                    boolean connected = result == BridgeState.CONNECTED;
 
                     Intent intent = new Intent(
                             SplashScreenActivity.this,

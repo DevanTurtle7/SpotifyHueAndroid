@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.devankav.spotifyhue.listeners.BridgeStateListener;
 import com.devankav.spotifyhue.requests.GlobalRequestQueue;
 import com.devankav.spotifyhue.requests.JsonArrayBodyRequest;
 
@@ -52,10 +53,8 @@ public class BridgeConnector {
      * @param username The username used for the bridge
      * @return The status of the bridge (whether or not it connected)
      */
-    public BridgeStatus reconnect(String ip, String username) {
-        //TODO: Refactor to use listeners instead of observers
-        
-        final BridgeStatus result = new BridgeStatus();
+    public BridgeStatusListenable reconnect(String ip, String username) {
+        final BridgeStatusListenable result = new BridgeStatusListenable();
 
         // Create a new response listener
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
@@ -63,17 +62,13 @@ public class BridgeConnector {
             public void onResponse(JSONObject response) {
                 if (response.has("error")) {
                     Log.d("BridgeConnector", "Failed to reconnect: " + response);
-
-                    result.updateState(BridgeState.FAILED_TO_CONNECT);
+                    result.setState(BridgeState.FAILED_TO_CONNECT);
                 } else if (response.has("lights")){
                     Log.d("BridgeConnector", "Successfully reconnected");
-
-                    result.updateUsername(username);
-                    result.updateState(BridgeState.CONNECTED);
+                    result.setState(BridgeState.CONNECTED);
                 } else {
                     Log.d("BridgeConnector", "An unknown error occurred while trying to reconnect: " + response);
-
-                    result.updateState(BridgeState.FAILED_TO_CONNECT);
+                    result.setState(BridgeState.FAILED_TO_CONNECT);
                 }
             }
         };
@@ -82,7 +77,7 @@ public class BridgeConnector {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                result.updateState(BridgeState.FAILED_TO_CONNECT);
+                result.setState(BridgeState.FAILED_TO_CONNECT);
 
                 // Print the error message
                 if (error.getMessage() != null) {
@@ -105,8 +100,8 @@ public class BridgeConnector {
      * @param ip The IP address of the bridge
      * @return The status of the bridge (whether or not it connected)
      */
-    public BridgeStatus connect(String ip, @Nullable BridgeStatus bridgeStatus) {
-        final BridgeStatus result = bridgeStatus == null ? new BridgeStatus() : bridgeStatus; // Initialize the bridge state result
+    public BridgeStatusObservable connect(String ip, @Nullable BridgeStatusObservable bridgeStatus) {
+        final BridgeStatusObservable result = bridgeStatus == null ? new BridgeStatusObservable() : bridgeStatus; // Initialize the bridge state result
 
         // Create a new response listener
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
@@ -180,7 +175,7 @@ public class BridgeConnector {
         return result;
     }
 
-    public BridgeStatus connect(String ip) {
+    public BridgeStatusObservable connect(String ip) {
         return connect(ip, null);
     }
 
