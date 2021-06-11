@@ -35,21 +35,21 @@ public class BridgeConnector {
     public static final String SUFFIX = "/api";
     public static final String DISCOVERY_URL = "https://discovery.meethue.com";
 
-    private GlobalRequestQueue queue;
-    private SharedPreferences sharedPreferences;
+    private final GlobalRequestQueue queue;
 
     /**
      * The constructor
+     *
      * @param context The application context. Used to make JSON requests and access shared preferences
      */
     public BridgeConnector(Context context) {
         this.queue = new GlobalRequestQueue(context); // Create a new instance of the request queue
-        this.sharedPreferences = context.getSharedPreferences("bridgeMem", Context.MODE_PRIVATE); // Get the shared preferences instance
     }
 
     /**
      * Attempts to reconnect to a bridge that has previously been connected to
-     * @param ip The IP address of the bridge
+     *
+     * @param ip       The IP address of the bridge
      * @param username The username used for the bridge
      * @return The status of the bridge (whether or not it connected)
      */
@@ -60,15 +60,20 @@ public class BridgeConnector {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if (response.has("error")) {
-                    Log.d("BridgeConnector", "Failed to reconnect: " + response);
-                    result.setState(BridgeState.FAILED_TO_CONNECT);
-                } else if (response.has("lights")){
-                    Log.d("BridgeConnector", "Successfully reconnected");
+                if (response.has("config")) { // Check if the bridge was successfully connected to
                     result.setState(BridgeState.CONNECTED);
+
+                    Log.d("BridgeConnector", "Successfully reconnected");
                 } else {
-                    Log.d("BridgeConnector", "An unknown error occurred while trying to reconnect: " + response);
                     result.setState(BridgeState.FAILED_TO_CONNECT);
+
+                    if (response.has("error")) {
+                        // There was an error connecting to the bridge
+                        Log.d("BridgeConnector", "Failed to reconnect: " + response);
+                    } else {
+                        // There was an unknown response
+                        Log.d("BridgeConnector", "An unknown error occurred while trying to reconnect: " + response);
+                    }
                 }
             }
         };
@@ -88,7 +93,7 @@ public class BridgeConnector {
             }
         };
 
-        String url = PREFIX + ip + SUFFIX + "/" + username;
+        String url = PREFIX + ip + SUFFIX + "/" + username; // Build the URL to reconnect to the bridge
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null, listener, errorListener);
         queue.getRequestQueue().add(jsonRequest); // Make the JSON call
 
@@ -97,6 +102,7 @@ public class BridgeConnector {
 
     /**
      * Attempts to connect to a bridge
+     *
      * @param ip The IP address of the bridge
      * @return The status of the bridge (whether or not it connected)
      */
@@ -181,6 +187,7 @@ public class BridgeConnector {
 
     /**
      * Gets a list of all available bridges on the network
+     *
      * @return A bridge result containing all of the bridges on the network
      */
     public DiscoveryResult getAllBridges() {
