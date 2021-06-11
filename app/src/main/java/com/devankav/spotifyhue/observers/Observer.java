@@ -1,5 +1,6 @@
 /**
- * A functional interface that acts as a generic observer
+ * A functional interface that acts as a generic observer. Used to listen for asynchronous
+ * events that happen more than once.
  *
  * @author Devan Kavalchek
  */
