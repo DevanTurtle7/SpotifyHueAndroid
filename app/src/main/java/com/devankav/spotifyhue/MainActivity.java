@@ -19,7 +19,9 @@ import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.types.PlayerState;
 import com.squareup.picasso.Picasso;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -68,10 +70,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        // Get extras
         Bundle bundle = getIntent().getExtras();
         String ipAddress = bundle.getString("ipAddress");
         String id = bundle.getString("id");
         String username = bundle.getString("username");
+
+        // Save bridge info in memory
+        SharedPreferences sharedPreferences = getSharedPreferences("recentBridge", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("ipAddress", ipAddress);
+        editor.putString("id", id);
+        editor.putString("username", username);
+        editor.apply();
 
         // Setup the connection parameters for the spotify remote
         ConnectionParams connectionParams = new ConnectionParams

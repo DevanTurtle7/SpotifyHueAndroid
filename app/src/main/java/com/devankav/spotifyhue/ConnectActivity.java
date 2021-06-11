@@ -45,7 +45,6 @@ public class ConnectActivity extends Activity {
                     if (bridgeStatus.getState() != BridgeState.CONNECTED) {
                         connector.connect(ipAddress, bridgeStatus);
                     } else {
-                        // TODO: Update shared prefs
                         Log.d("ConnectActivity", "connected! Username: " + bridgeStatus.getUsername());
 
                         Intent intent = new Intent(ConnectActivity.this, MainActivity.class);

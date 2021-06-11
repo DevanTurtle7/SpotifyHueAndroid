@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 import com.devankav.spotifyhue.bridgeConnection.BridgeState;
@@ -57,14 +58,18 @@ public class SplashScreenActivity extends Activity {
         long startTime = System.currentTimeMillis(); // Get the current time
 
         // Attempt to get the info of the last bridge that was connected
-        SharedPreferences sharedPreferences = getSharedPreferences("bridgeMem", Context.MODE_PRIVATE);
-        String recentIpAddress = sharedPreferences.getString("recentIpAddress", null);
-        String recentUsername = sharedPreferences.getString("recentUsername", null);
-        String recentId = sharedPreferences.getString("recentId", null);
+        SharedPreferences sharedPreferences = getSharedPreferences("recentBridge", Context.MODE_PRIVATE);
+        String ipAddress = sharedPreferences.getString("ipAddress", null);
+        String id = sharedPreferences.getString("id", null);
+        String username = sharedPreferences.getString("username", null);
 
-        if (recentIpAddress != null && recentUsername != null && recentId != null) { // Check if the previous info exists
+        Log.d("SplashScreen", "ip: " + ipAddress);
+        Log.d("SplashScreen", "id: " + id);
+        Log.d("SplashScreen", "user: " + username);
+
+        if (ipAddress != null && username != null && id != null) { // Check if the previous info exists
             BridgeConnector bridgeConnector = new BridgeConnector(this); // Create a new BridgeConnector instance
-            BridgeStatus bridgeState = bridgeConnector.reconnect(recentIpAddress, recentUsername); // Attempt to connect to the bridge
+            BridgeStatus bridgeState = bridgeConnector.reconnect(ipAddress, username); // Attempt to connect to the bridge
 
             // Create and register a new bridge state observer
             bridgeState.registerObserver(new BridgeStateObserver() {
@@ -79,9 +84,9 @@ public class SplashScreenActivity extends Activity {
                     );
 
                     if (connected) { // If going to main, pass bridge info
-                        intent.putExtra("ipAddress", recentIpAddress);
-                        intent.putExtra("id", recentId);
-                        intent.putExtra("username", recentUsername);
+                        intent.putExtra("ipAddress", ipAddress);
+                        intent.putExtra("id", id);
+                        intent.putExtra("username", username);
                     }
 
                     exitSplashScreen(intent, startTime); // Exit the splash screen
