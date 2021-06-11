@@ -1,5 +1,6 @@
 /**
- * An abstract class that supports observers
+ * An abstract class that supports observers. Classes that derive this class
+ * should have asynchronous events that happen more than once.
  *
  * @author Devan Kavalchek
  */
