@@ -9,6 +9,7 @@ package com.devankav.spotifyhue;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,6 +18,7 @@ import android.widget.ListView;
 
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 import com.devankav.spotifyhue.bridgeConnection.BridgeResult;
+import com.devankav.spotifyhue.listeners.DiscoveryListener;
 import com.devankav.spotifyhue.observers.DiscoveryObserver;
 import com.devankav.spotifyhue.bridgeConnection.DiscoveryResult;
 
@@ -50,14 +52,17 @@ public class DiscoveryActivity extends Activity {
         ListView bridgeList = findViewById(R.id.bridgeSelection);
         bridgeList.setAdapter(adapter); // Set the lists adapter to the one created
 
-        // TODO: Use listeners instead of observers.
-        // TODO: Add UI for when there are no bridges discovered
-        // Create and register a new discovery observer
-        discoveryResult.registerObserver(new DiscoveryObserver() {
+        // Create and register a new discovery listener
+        discoveryResult.registerListener(new DiscoveryListener() {
             @Override
-            public void notifyObserver(BridgeResult updated) {
-                bridges.add(updated); // Add the bridge to the list
-                adapter.notifyDataSetChanged(); // Notify the adapter
+            public void finished(DiscoveryResult result) {
+                if (result.hasResults()) {
+                    bridges.addAll(result.getBridges()); // Add the bridges to the list
+                    adapter.notifyDataSetChanged(); // Notify the adapter
+                } else {
+                    // TODO: Add UI for when there are no bridges discovered
+                    Log.d("DiscoveryActivity", "No bridges found on the network");
+                }
             }
         });
 

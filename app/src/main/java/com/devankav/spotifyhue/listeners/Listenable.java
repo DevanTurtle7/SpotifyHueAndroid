@@ -22,7 +22,7 @@ public abstract class Listenable<Listener> {
      * Registers a listener to be notified when the event is finished
      * @param listener The listener being registered
      */
-    public void registerObserver(Listener listener) {
+    public void registerListener(Listener listener) {
         this.listeners.add(listener);
     }
 
@@ -30,7 +30,7 @@ public abstract class Listenable<Listener> {
      * Deregisters a listener
      * @param listener The listener being deregistered
      */
-    public void deregisterObserver(Listener listener) {
+    public void deregisterListener(Listener listener) {
         this.listeners.remove(listener);
     }
 

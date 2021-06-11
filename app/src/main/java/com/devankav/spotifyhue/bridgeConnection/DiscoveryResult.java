@@ -11,6 +11,7 @@ import com.devankav.spotifyhue.listeners.DiscoveryListener;
 import com.devankav.spotifyhue.listeners.Listenable;
 import com.devankav.spotifyhue.listeners.Listener;
 import com.devankav.spotifyhue.listeners.ListenerFinishedException;
+import com.devankav.spotifyhue.listeners.ListenerNotFinishedException;
 import com.devankav.spotifyhue.observers.DiscoveryObserver;
 import com.devankav.spotifyhue.observers.Observable;
 
@@ -37,7 +38,7 @@ public class DiscoveryResult extends Listenable<DiscoveryListener> {
             this.bridges.addAll(bridgeResults); // Add all the results
             notifyListeners(); // Notify the listeners
         } else {
-            throw new ListenerFinishedException("Attempted to update listenable object after it finished.");
+            throw new ListenerFinishedException();
         }
     }
 
@@ -46,15 +47,31 @@ public class DiscoveryResult extends Listenable<DiscoveryListener> {
      * @return A set of all bridge results
      */
     public Set<BridgeResult> getBridges() {
-        return this.bridges;
+        if (this.isFinished()) {
+            return this.bridges;
+        } else {
+            throw new ListenerNotFinishedException();
+        }
     }
 
     /**
      * Notifies all of the registered listeners that an update has occurred
      */
-    public void notifyListeners() {
+    private void notifyListeners() {
         for (DiscoveryListener listener : listeners) { // Iterate over each listener
             listener.finished(this); // Notify the listener of the results
+        }
+    }
+
+    /**
+     * Returns if any bridges were discovered
+     * @return Returns whether or not there were any bridges found on the network
+     */
+    public boolean hasResults() {
+        if (this.isFinished()) {
+            return !this.bridges.isEmpty();
+        } else {
+            throw new ListenerNotFinishedException();
         }
     }
 }
