@@ -17,10 +17,8 @@ import android.util.Log;
 
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 import com.devankav.spotifyhue.bridgeConnection.BridgeState;
-import com.devankav.spotifyhue.bridgeConnection.BridgeStatusListenable;
+import com.devankav.spotifyhue.bridgeConnection.ReconnectResult;
 import com.devankav.spotifyhue.listeners.BridgeStateListener;
-import com.devankav.spotifyhue.observers.BridgeStateObserver;
-import com.devankav.spotifyhue.bridgeConnection.BridgeStatusObservable;
 
 public class SplashScreenActivity extends Activity {
 
@@ -71,7 +69,7 @@ public class SplashScreenActivity extends Activity {
 
         if (ipAddress != null && username != null && id != null) { // Check if the previous info exists
             BridgeConnector bridgeConnector = new BridgeConnector(this); // Create a new BridgeConnector instance
-            BridgeStatusListenable bridgeState = bridgeConnector.reconnect(ipAddress, username); // Attempt to connect to the bridge
+            ReconnectResult bridgeState = bridgeConnector.reconnect(ipAddress, username); // Attempt to connect to the bridge
 
             // Create and register a new bridge state observer
             bridgeState.registerListener(new BridgeStateListener() {

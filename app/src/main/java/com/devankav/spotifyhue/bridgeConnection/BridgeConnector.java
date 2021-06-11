@@ -18,7 +18,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.devankav.spotifyhue.listeners.BridgeStateListener;
 import com.devankav.spotifyhue.requests.GlobalRequestQueue;
 import com.devankav.spotifyhue.requests.JsonArrayBodyRequest;
 
@@ -53,8 +52,8 @@ public class BridgeConnector {
      * @param username The username used for the bridge
      * @return The status of the bridge (whether or not it connected)
      */
-    public BridgeStatusListenable reconnect(String ip, String username) {
-        final BridgeStatusListenable result = new BridgeStatusListenable();
+    public ReconnectResult reconnect(String ip, String username) {
+        final ReconnectResult result = new ReconnectResult();
 
         // Create a new response listener
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
@@ -100,8 +99,8 @@ public class BridgeConnector {
      * @param ip The IP address of the bridge
      * @return The status of the bridge (whether or not it connected)
      */
-    public BridgeStatusObservable connect(String ip, @Nullable BridgeStatusObservable bridgeStatus) {
-        final BridgeStatusObservable result = bridgeStatus == null ? new BridgeStatusObservable() : bridgeStatus; // Initialize the bridge state result
+    public ConnectResult connect(String ip, @Nullable ConnectResult bridgeStatus) {
+        final ConnectResult result = bridgeStatus == null ? new ConnectResult() : bridgeStatus; // Initialize the bridge state result
 
         // Create a new response listener
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
@@ -175,7 +174,7 @@ public class BridgeConnector {
         return result;
     }
 
-    public BridgeStatusObservable connect(String ip) {
+    public ConnectResult connect(String ip) {
         return connect(ip, null);
     }
 

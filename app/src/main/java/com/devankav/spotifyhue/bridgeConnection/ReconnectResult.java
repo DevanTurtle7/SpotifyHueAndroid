@@ -14,14 +14,14 @@ import com.devankav.spotifyhue.listeners.ListenerNotFinishedException;
 import com.devankav.spotifyhue.observers.BridgeStateObserver;
 import com.devankav.spotifyhue.observers.Observable;
 
-public class BridgeStatusListenable extends Listenable<BridgeStateListener> {
+public class ReconnectResult extends Listenable<BridgeStateListener> {
 
     private BridgeState bridgeState;
 
     /**
      * The constructor
      */
-    public BridgeStatusListenable() {
+    public ReconnectResult() {
         bridgeState = BridgeState.NOT_CONNECTED;
     }
 

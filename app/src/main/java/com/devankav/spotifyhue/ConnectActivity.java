@@ -8,7 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.devankav.spotifyhue.bridgeConnection.BridgeState;
-import com.devankav.spotifyhue.bridgeConnection.BridgeStatusObservable;
+import com.devankav.spotifyhue.bridgeConnection.ConnectResult;
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 
 public class ConnectActivity extends Activity {
@@ -33,7 +33,7 @@ public class ConnectActivity extends Activity {
         long startTime = System.currentTimeMillis(); // Get the current time
 
         BridgeConnector connector = new BridgeConnector(this);
-        BridgeStatusObservable bridgeStatus = connector.connect(ipAddress);
+        ConnectResult bridgeStatus = connector.connect(ipAddress);
 
         // TODO: Optimize with scheduler
         bridgeStatus.registerObserver(updated -> {

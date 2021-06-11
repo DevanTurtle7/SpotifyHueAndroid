@@ -9,7 +9,7 @@ package com.devankav.spotifyhue.bridgeConnection;
 import com.devankav.spotifyhue.observers.BridgeStateObserver;
 import com.devankav.spotifyhue.observers.Observable;
 
-public class BridgeStatusObservable extends Observable<BridgeStateObserver> {
+public class ConnectResult extends Observable<BridgeStateObserver> {
 
     private BridgeState bridgeState;
     private String username;
@@ -17,7 +17,7 @@ public class BridgeStatusObservable extends Observable<BridgeStateObserver> {
     /**
      * The constructor
      */
-    public BridgeStatusObservable() {
+    public ConnectResult() {
         bridgeState = BridgeState.NOT_CONNECTED;
         username = null;
     }
