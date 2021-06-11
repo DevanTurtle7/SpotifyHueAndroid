@@ -50,6 +50,8 @@ public class DiscoveryActivity extends Activity {
         ListView bridgeList = findViewById(R.id.bridgeSelection);
         bridgeList.setAdapter(adapter); // Set the lists adapter to the one created
 
+        // TODO: Use listeners instead of observers.
+        // TODO: Add UI for when there are no bridges discovered
         // Create and register a new discovery observer
         discoveryResult.registerObserver(new DiscoveryObserver() {
             @Override

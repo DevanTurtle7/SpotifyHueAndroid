@@ -49,9 +49,16 @@ public class ConnectActivity extends Activity {
                         Log.d("ConnectActivity", "connected! Username: " + bridgeStatus.getUsername());
 
                         Intent intent = new Intent(ConnectActivity.this, MainActivity.class);
+
+                        // Add flags to clear activity stack
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                        // Pass bridge info to main
                         intent.putExtra("ipAddress", ipAddress);
                         intent.putExtra("id", id);
                         intent.putExtra("username", bridgeStatus.getUsername());
+
+                        // Go to main
                         startActivity(intent);
                     }
                 } else {
