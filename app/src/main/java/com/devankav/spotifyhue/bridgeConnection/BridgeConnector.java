@@ -1,5 +1,6 @@
 /**
- * A helper class that communicates with the Philips hue bridge and API.
+ * A helper class that communicates with the Philips hue bridge and API in the connection
+ * process.
  *
  * @author Devan Kavalchek
  */

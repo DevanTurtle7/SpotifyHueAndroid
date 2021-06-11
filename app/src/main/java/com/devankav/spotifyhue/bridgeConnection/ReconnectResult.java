@@ -1,5 +1,5 @@
 /**
- * A listenable object that returns a BridgeState.
+ * The result of a reconnection attempt. A listenable object that returns a BridgeState.
  *
  * @author Devan Kavalchek
  */

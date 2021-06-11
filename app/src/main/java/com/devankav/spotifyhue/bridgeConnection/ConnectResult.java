@@ -1,5 +1,5 @@
 /**
- * An observable object that returns a BridgeState
+ * The result of a connection attempt. An observable object that returns a BridgeState.
  *
  * @author Devan Kavalchek
  */
