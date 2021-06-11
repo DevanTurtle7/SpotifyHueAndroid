@@ -12,6 +12,7 @@ import com.devankav.spotifyhue.bridgeConnection.Bridge;
 import com.devankav.spotifyhue.credentials.SpotifyCredentials;
 import com.devankav.spotifyhue.observers.PaletteObserver;
 import com.devankav.spotifyhue.services.LightSync;
+import com.devankav.spotifyhue.spotifyHelpers.AlbumArtPalette;
 import com.devankav.spotifyhue.spotifyHelpers.StateParser;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;

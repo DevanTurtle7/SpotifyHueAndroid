@@ -5,7 +5,7 @@
  * @author Devan Kavalchek
  */
 
-package com.devankav.spotifyhue;
+package com.devankav.spotifyhue.spotifyHelpers;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -17,6 +17,8 @@ import com.devankav.spotifyhue.observers.Observable;
 import com.devankav.spotifyhue.observers.PaletteObserver;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+
+import static android.view.View.X;
 
 public class AlbumArtPalette extends Observable<PaletteObserver> implements Target {
 
