@@ -17,6 +17,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.devankav.spotifyhue.requests.GlobalRequestQueue;
 import com.devankav.spotifyhue.requests.JsonArrayBodyRequest;
 
@@ -51,7 +52,49 @@ public class BridgeConnector {
      * @return The status of the bridge (whether or not it connected)
      */
     public BridgeStatus reconnect(String ip, String username) {
-        return null;
+        final BridgeStatus result = new BridgeStatus();
+
+        // Create a new response listener
+        Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                if (response.has("error")) {
+                    Log.d("BridgeConnector", "Failed to reconnect: " + response);
+
+                    result.updateState(BridgeState.FAILED_TO_CONNECT);
+                } else if (response.has("lights")){
+                    Log.d("BridgeConnector", "Successfully reconnected");
+
+                    result.updateUsername(username);
+                    result.updateState(BridgeState.CONNECTED);
+                } else {
+                    Log.d("BridgeConnector", "An unknown error occurred while trying to reconnect: " + response);
+
+                    result.updateState(BridgeState.FAILED_TO_CONNECT);
+                }
+            }
+        };
+
+        // Create a new error listener
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                result.updateState(BridgeState.FAILED_TO_CONNECT);
+
+                // Print the error message
+                if (error.getMessage() != null) {
+                    Log.e("BridgeConnector", error.getMessage());
+                } else {
+                    Log.e("BridgeConnector", "There was an unknown error while reconnecting.");
+                }
+            }
+        };
+
+        String url = PREFIX + ip + SUFFIX + "/" + username;
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null, listener, errorListener);
+        queue.getRequestQueue().add(jsonRequest); // Make the JSON call
+
+        return result;
     }
 
     /**
@@ -79,12 +122,8 @@ public class BridgeConnector {
 
                         result.updateUsername(username); // Update the username
                         result.updateState(BridgeState.CONNECTED);
-
-                        // Save the bridge information in shared preferences
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        // TODO: Write bridge info to shared prefs
                     } else {
-                        Log.e("BridgeConnector", "There was an unexpected response: " + body.toString());
+                        Log.e("BridgeConnector", "There was an unexpected response while trying to connect: " + body.toString());
                     }
                 } catch (JSONException e) {
                     result.updateState(BridgeState.FAILED_TO_CONNECT);
@@ -108,7 +147,7 @@ public class BridgeConnector {
                 if (error.getMessage() != null) {
                     Log.e("BridgeConnector", error.getMessage());
                 } else {
-                    Log.e("BridgeConnector", "There was an unknown error getting all bridges.");
+                    Log.e("BridgeConnector", "There was an unknown error while connecting.");
                 }
             }
         };
