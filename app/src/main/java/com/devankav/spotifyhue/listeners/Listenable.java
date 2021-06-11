@@ -1,5 +1,6 @@
 /**
- * An abstract class that supports listeners.
+ * An abstract class that supports listeners. Has events that happen exactly once that
+ * can be listened to.c
  *
  * @author Devan Kavalchek
  */
@@ -10,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class Listenable<Listener> {
+
     protected Set<Listener> listeners;
     private boolean finished;
 
@@ -38,7 +40,11 @@ public abstract class Listenable<Listener> {
      * Sets this object as finished
      */
     protected void finish() {
-        this.finished = true;
+        if (this.isFinished()) {
+            this.finished = true;
+        } else {
+            throw new ListenerFinishedException("Attempted to finish a listener that is already finished.");
+        }
     }
 
     /**

@@ -1,3 +1,10 @@
+/**
+ * An exception that is generally thrown when an attempt to access data is made before a listener
+ * finishes.
+ *
+ * @author Devan Kavalchek
+ */
+
 package com.devankav.spotifyhue.listeners;
 
 public class ListenerNotFinishedException extends RuntimeException {
