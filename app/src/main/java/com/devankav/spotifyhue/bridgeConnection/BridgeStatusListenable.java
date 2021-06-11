@@ -1,3 +1,9 @@
+/**
+ * A listenable object that returns a BridgeState.
+ *
+ * @author Devan Kavalchek
+ */
+
 package com.devankav.spotifyhue.bridgeConnection;
 
 import com.devankav.spotifyhue.listeners.BridgeStateListener;

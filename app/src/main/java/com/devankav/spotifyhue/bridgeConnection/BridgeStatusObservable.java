@@ -1,5 +1,5 @@
 /**
- * An object that displays the status of a given bridge
+ * An observable object that returns a BridgeState
  *
  * @author Devan Kavalchek
  */
