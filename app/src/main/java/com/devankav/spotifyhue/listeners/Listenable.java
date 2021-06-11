@@ -11,9 +11,11 @@ import java.util.Set;
 
 public abstract class Listenable<Listener> {
     protected Set<Listener> listeners;
+    private boolean finished;
 
     public Listenable() {
         this.listeners = new HashSet<>();
+        this.finished = false;
     }
 
     /**
@@ -30,5 +32,20 @@ public abstract class Listenable<Listener> {
      */
     public void deregisterObserver(Listener listener) {
         this.listeners.remove(listener);
+    }
+
+    /**
+     * Sets this object as finished
+     */
+    protected void finish() {
+        this.finished = true;
+    }
+
+    /**
+     * An accessor for finished
+     * @return Whether or not this object is finished
+     */
+    public boolean isFinished() {
+        return this.finished;
     }
 }

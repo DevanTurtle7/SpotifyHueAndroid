@@ -25,6 +25,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class BridgeConnector {
 
     //TODO: Refactor to use listeners instead of observers
@@ -192,6 +195,8 @@ public class BridgeConnector {
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                Set<BridgeResult> results = new HashSet<>();
+
                 for (int i = 0; i < response.length(); i++) { // Iterate over all the JSON objects in the response
                     try {
                         JSONObject current = response.getJSONObject(i); // Get the JSON object at the current index
@@ -199,7 +204,7 @@ public class BridgeConnector {
                         String ipAddress = current.getString("internalipaddress"); // Get the ip address of the bridge
 
                         BridgeResult bridgeResult = new BridgeResult(id, ipAddress); // Create a new bridge result
-                        discoveryResult.addBridge(bridgeResult); // Add the bridge to the results
+                        results.add(bridgeResult); // Add the bridge to the set
                     } catch (JSONException e) {
                         if (e.getMessage() != null) {
                             Log.e("BridgeConnector", e.getMessage());
@@ -208,6 +213,8 @@ public class BridgeConnector {
                         }
                     }
                 }
+
+                discoveryResult.updatedBridges(results);
             }
         };
 

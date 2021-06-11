@@ -7,13 +7,17 @@
 
 package com.devankav.spotifyhue.bridgeConnection;
 
+import com.devankav.spotifyhue.listeners.DiscoveryListener;
+import com.devankav.spotifyhue.listeners.Listenable;
+import com.devankav.spotifyhue.listeners.Listener;
+import com.devankav.spotifyhue.listeners.ListenerFinishedException;
 import com.devankav.spotifyhue.observers.DiscoveryObserver;
 import com.devankav.spotifyhue.observers.Observable;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class DiscoveryResult extends Observable<DiscoveryObserver> {
+public class DiscoveryResult extends Listenable<DiscoveryListener> {
     Set<BridgeResult> bridges;
 
     /**
@@ -24,21 +28,33 @@ public class DiscoveryResult extends Observable<DiscoveryObserver> {
     }
 
     /**
-     * Adds the bridge to the set of results
-     * @param bridgeResult The bridge being added
+     * Updates the set of bridges with the results of the search. Can only be executed once.
+     * @param bridgeResults The bridges discovered
      */
-    public void addBridge(BridgeResult bridgeResult) {
-        bridges.add(bridgeResult); // Add the new bridge
-        notifyObservers(bridgeResult); // Notify any observers that a new bridge was added
+    public void updatedBridges(Set<BridgeResult> bridgeResults) {
+        if (!this.isFinished()) {
+            this.finish();
+            this.bridges.addAll(bridgeResults); // Add all the results
+            notifyListeners(); // Notify the listeners
+        } else {
+            throw new ListenerFinishedException("Attempted to update listenable object after it finished.");
+        }
     }
 
     /**
-     * Notifies all of the registered observers that an update has occurred
-     * @param bridgeResult The new bridge that was discovered
+     * An accessor for bridges
+     * @return A set of all bridge results
      */
-    public void notifyObservers(BridgeResult bridgeResult) {
-        for (DiscoveryObserver observer : observers) { // Iterate over each observer
-            observer.notifyObserver(bridgeResult); // Notify the observer of the new bridge that was discovered
+    public Set<BridgeResult> getBridges() {
+        return this.bridges;
+    }
+
+    /**
+     * Notifies all of the registered listeners that an update has occurred
+     */
+    public void notifyListeners() {
+        for (DiscoveryListener listener : listeners) { // Iterate over each listener
+            listener.finished(this); // Notify the listener of the results
         }
     }
 }
