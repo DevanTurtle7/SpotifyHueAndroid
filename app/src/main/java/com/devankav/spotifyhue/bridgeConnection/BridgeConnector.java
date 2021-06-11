@@ -30,8 +30,6 @@ import java.util.Set;
 
 public class BridgeConnector {
 
-    //TODO: Refactor to use listeners instead of observers
-
     public static final String PREFIX = "http://";
     public static final String SUFFIX = "/api";
     public static final String DISCOVERY_URL = "https://discovery.meethue.com";
@@ -55,6 +53,8 @@ public class BridgeConnector {
      * @return The status of the bridge (whether or not it connected)
      */
     public BridgeStatus reconnect(String ip, String username) {
+        //TODO: Refactor to use listeners instead of observers
+        
         final BridgeStatus result = new BridgeStatus();
 
         // Create a new response listener
