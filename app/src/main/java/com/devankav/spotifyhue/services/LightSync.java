@@ -8,6 +8,7 @@
 package com.devankav.spotifyhue.services;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -21,6 +22,7 @@ import androidx.palette.graphics.Palette;
 import com.devankav.spotifyhue.R;
 import com.devankav.spotifyhue.bridgeConnection.Bridge;
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
+import com.devankav.spotifyhue.bridgeConnection.LightUpdater;
 import com.devankav.spotifyhue.credentials.SpotifyCredentials;
 import com.devankav.spotifyhue.observers.PaletteObserver;
 import com.devankav.spotifyhue.spotifyHelpers.AlbumArtPalette;
@@ -39,6 +41,7 @@ public class LightSync extends Service {
     private BridgeConnector connector;
     private SpotifyAppRemote appRemote;
     private AlbumArtPalette albumArtPalette;
+    private LightUpdater lightUpdater;
 
     /**
      * A callback for when there was a player event
@@ -66,6 +69,7 @@ public class LightSync extends Service {
         String username = bundle.getString("username");
 
         Bridge bridge = new Bridge(ipAddress, id, username);
+        lightUpdater = new LightUpdater(ipAddress, id, username, this);
 
         // Setup the connection parameters for the spotify remote
         ConnectionParams connectionParams = new ConnectionParams
@@ -83,11 +87,13 @@ public class LightSync extends Service {
 
                 albumArtPalette = new AlbumArtPalette(); // Create a new album art palette
 
+
                 // Create a new palette observer
                 PaletteObserver observer = new PaletteObserver() {
                     @Override
                     public void notifyObserver(Palette updated) {
                         Log.d("LightSync", Arrays.toString(AlbumArtPalette.getXYColor(updated)));
+                        lightUpdater.getLights();
                     }
                 };
 
