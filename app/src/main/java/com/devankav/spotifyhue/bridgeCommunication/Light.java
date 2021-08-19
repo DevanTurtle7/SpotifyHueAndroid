@@ -6,13 +6,31 @@ import com.devankav.spotifyhue.listeners.Listenable;
 
 public class Light {
 
-    private String id;
+    public enum LightType {
+        EXTENDED_COLOR_LIGHT,
+        COLOR_TEMPERATURE_LIGHT,
+        OTHER;
+    }
 
-    public Light(String id) {
+    private String id;
+    private String name;
+    private LightType type;
+
+    public Light(String id, String name, LightType type) {
         this.id = id;
+        this.name = name;
+        this.type = type;
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LightType getType() {
+        return type;
     }
 }

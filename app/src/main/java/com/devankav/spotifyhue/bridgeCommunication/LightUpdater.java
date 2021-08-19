@@ -10,8 +10,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.devankav.spotifyhue.listeners.LightsListener;
 import com.devankav.spotifyhue.requests.GlobalRequestQueue;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class LightUpdater {
@@ -39,6 +41,19 @@ public class LightUpdater {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("LightUpdater", response.toString());
+
+                Iterator<String> keys = response.keys();
+
+                while(keys.hasNext()) {
+                    String key = keys.next();
+
+                    try {
+                        if (response.get(key) instanceof JSONObject) {
+                            Log.d("LightUpdater", key);
+                        }
+                    } catch (JSONException e) {
+                    }
+                }
             }
         };
 
