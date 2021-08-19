@@ -31,11 +31,7 @@ public class LightGroup extends Listenable<LightsListener> {
     }
 
     public Set<Light> getLights() {
-        if (this.isFinished()) {
-            return this.lights;
-        } else {
-            throw new ListenerNotFinishedException();
-        }
+        return this.lights;
     }
 
     private void notifyListeners() {

@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bridge = new Bridge(ipAddress, id, username, this);
-        LightGroup lights = bridge.getLightGroup();
+        Set<Light> lights = bridge.getLights();
 
         Button switchButton = findViewById(R.id.switchButton);
         switchButton.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d("MainActivity", brightness + "");
 
-                for (Light light : lights.getLights()) {
+                for (Light light : lights) {
                     light.updateLightBrightness(brightness);
                 }
             }
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d("MainActivity", "forcing " + brightness + "");
 
-                for (Light light : lights.getLights()) {
+                for (Light light : lights) {
                     light.updateLightBrightness(brightness, true);
                 }
             }

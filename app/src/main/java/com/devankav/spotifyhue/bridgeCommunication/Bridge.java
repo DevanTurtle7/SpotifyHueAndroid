@@ -89,8 +89,8 @@ public class Bridge {
         queue.getRequestQueue().add(jsonRequest); // Make the JSON call
     }
 
-    public LightGroup getLightGroup() {
-        return lights;
+    public Set<Light> getLights() {
+        return lights.getLights();
     }
 
     public void updateLight(String id, JSONObject body) {

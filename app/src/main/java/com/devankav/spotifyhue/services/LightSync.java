@@ -68,7 +68,7 @@ public class LightSync extends Service {
         String username = bundle.getString("username");
 
         bridge = new Bridge(ipAddress, id, username, this);
-        LightGroup lights = bridge.getLightGroup();
+        Set<Light> lights = bridge.getLights();
 
         // Setup the connection parameters for the spotify remote
         ConnectionParams connectionParams = new ConnectionParams
@@ -86,19 +86,11 @@ public class LightSync extends Service {
 
                 albumArtPalette = new AlbumArtPalette(); // Create a new album art palette
 
-                LightsListener lightsListener = new LightsListener() {
-                    @Override
-                    public void finished(LightGroup result) {
-                        Set<Light> lights = result.getLights();
-                    }
-                };
-                lights.registerListener(lightsListener);
-
                 PaletteObserver observer = new PaletteObserver() {
                     @Override
                     public void notifyObserver(Palette updated) {
                         Log.d("LightSync", Arrays.toString(AlbumArtPalette.getXYColor(updated)));
-                            for (Light light : lights.getLights()) {
+                            for (Light light : lights) {
                                 light.updateLightColor(AlbumArtPalette.getXYColor(updated));
                             }
                     }
