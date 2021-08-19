@@ -51,6 +51,19 @@ public class AlbumArtPalette extends Observable<PaletteObserver> implements Targ
     }
 
     /**
+     * Gets the most vibrant color from a given palette and returns
+     * the XY color value
+     *
+     * @param palette The palette being searched
+     * @return The XY color value of the palette
+     */
+    public static double[] getXYColor(Palette palette) {
+        int color = getColor(palette);
+
+        return rgbToXY(color);
+    }
+
+    /**
      * Converts an RGB integer to the XY color space
      * @param color An RGB integer
      * @return An array of length 2, containing an x and y value
