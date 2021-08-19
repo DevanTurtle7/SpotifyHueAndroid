@@ -5,7 +5,6 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.devankav.spotifyhue.requests.GlobalRequestQueue;
 import com.devankav.spotifyhue.requests.JsonArrayBodyRequest;
 import com.devankav.spotifyhue.spotifyHelpers.AlbumArtPalette;
 
@@ -37,14 +36,14 @@ public class Light {
     private String name;
     private LightType type;
     private boolean updatingBrightness;
-    private LightUpdater lightUpdater;
+    private Bridge bridge;
 
-    public Light(String id, String name, LightType type, LightUpdater lightUpdater) {
+    public Light(String id, String name, LightType type, Bridge bridge) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.updatingBrightness = false;
-        this.lightUpdater = lightUpdater;
+        this.bridge = bridge;
     }
 
     public String getId() {
@@ -65,7 +64,7 @@ public class Light {
                 String bodyString = "{\"xy\": " + Arrays.toString(xyColor) + "}";
                 JSONObject body = new JSONObject(bodyString);
 
-                lightUpdater.updateLight(id, body);
+                bridge.updateLight(id, body);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -82,7 +81,7 @@ public class Light {
             String bodyString = "{\"on\": " + on + "}";
             JSONObject body = new JSONObject(bodyString);
 
-            lightUpdater.updateLight(id, body);
+            bridge.updateLight(id, body);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -98,7 +97,7 @@ public class Light {
                 Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.d("LightUpdater", response.toString());
+                        Log.d("Bridge", response.toString());
                         updatingBrightness = false; // The job is finished. Mark updating as false
                     }
                 };
@@ -106,15 +105,15 @@ public class Light {
                 Response.ErrorListener errorListener = new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("LightUpdater", error.toString());
+                        Log.d("Bridge", error.toString());
                         updatingBrightness = false; // The job is finished. Mark updating as false
                     }
                 };
 
-                String lightsEndpoint = lightUpdater.getLightsEndpoint();
+                String lightsEndpoint = bridge.getLightsEndpoint();
                 String url = lightsEndpoint + "/" + id + "/state";
                 JsonArrayBodyRequest jsonRequest = new JsonArrayBodyRequest(Request.Method.PUT, url, body, listener, errorListener);
-                lightUpdater.addToQueue(jsonRequest); // Make the JSON call
+                bridge.addToQueue(jsonRequest); // Make the JSON call
             } catch (JSONException e) {
                 e.printStackTrace();
                 updatingBrightness = false; // The job is finished. Mark updating as false

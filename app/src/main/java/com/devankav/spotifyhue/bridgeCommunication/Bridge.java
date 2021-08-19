@@ -1,70 +1,61 @@
 package com.devankav.spotifyhue.bridgeCommunication;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
-
-import androidx.palette.graphics.Palette;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.devankav.spotifyhue.listeners.LightsListener;
 import com.devankav.spotifyhue.requests.GlobalRequestQueue;
 import com.devankav.spotifyhue.requests.JsonArrayBodyRequest;
-import com.devankav.spotifyhue.spotifyHelpers.AlbumArtPalette;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-public class LightUpdater {
+public class Bridge {
 
     public static final String PREFIX = "http://";
 
     private final String ipAddress;
     private final String id;
     private String username;
+    private LightGroup lights;
 
     private final GlobalRequestQueue queue;
     private final String lightsEndpoint;
-    private Set<String> brightnessJobs;
 
-    public LightUpdater(String ipAddress, String id, String username, Context context) {
+    public Bridge(String ipAddress, String id, String username, Context context) {
         this.ipAddress = ipAddress;
         this.id = id;
         this.username = username;
+        this.lights = new LightGroup();
 
         this.queue = new GlobalRequestQueue(context); // Create a new instance of the request queue
         this.lightsEndpoint = PREFIX + ipAddress + "/api/" + username + "/lights";
-        this.brightnessJobs = new HashSet<>();
+
+        discoverAllLights();
     }
 
     public String getLightsEndpoint() {
         return this.lightsEndpoint;
     }
 
-    public LightGroup getLights() {
-        LightGroup results = new LightGroup();
-        LightUpdater lightUpdater = this;
+    private void discoverAllLights() {
+        Bridge bridge = this;
 
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                List<Light> lights = new ArrayList<>();
+                Set<Light> discovered = new HashSet<>();
                 Iterator<String> keys = response.keys();
 
                 while(keys.hasNext()) {
@@ -76,14 +67,14 @@ public class LightUpdater {
                         String type = body.getString("type");
                         Light.LightType lightType = Light.LightType.classifyType(type);
 
-                        Light light = new Light(id, name, lightType, lightUpdater);
-                        lights.add(light);
+                        Light light = new Light(id, name, lightType, bridge);
+                        discovered.add(light);
                     } catch (JSONException e) {
-                        Log.d("LightUpdater", "Something went wrong...");
+                        Log.d("Bridge", "Something went wrong...");
                     }
                 }
 
-                results.updateLights(lights);
+                lights.updateLights(discovered);
             }
         };
 
@@ -96,22 +87,24 @@ public class LightUpdater {
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, lightsEndpoint, null, listener, errorListener);
         queue.getRequestQueue().add(jsonRequest); // Make the JSON call
+    }
 
-        return results;
+    public LightGroup getLightGroup() {
+        return lights;
     }
 
     public void updateLight(String id, JSONObject body) {
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                Log.d("LightUpdater", response.toString());
+                Log.d("Bridge", response.toString());
             }
         };
 
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("LightUpdater", error.toString());
+                Log.d("Bridge", error.toString());
             }
         };
 

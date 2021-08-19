@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Set;
 
 public class LightGroup extends Listenable<LightsListener> {
-    List<Light> lights;
+    Set<Light> lights;
 
     public LightGroup() {
-        this.lights = new ArrayList<>();
+        this.lights = new HashSet<>();
     }
 
-    public void updateLights(List<Light> lightList) {
+    public void updateLights(Set<Light> lightList) {
         if (!this.isFinished()) {
             this.finish();
             this.lights.addAll(lightList);
@@ -30,7 +30,7 @@ public class LightGroup extends Listenable<LightsListener> {
         }
     }
 
-    public List<Light> getLights() {
+    public Set<Light> getLights() {
         if (this.isFinished()) {
             return this.lights;
         } else {

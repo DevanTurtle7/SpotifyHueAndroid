@@ -10,10 +10,8 @@ import androidx.palette.graphics.Palette;
 
 import com.devankav.spotifyhue.bridgeCommunication.Light;
 import com.devankav.spotifyhue.bridgeCommunication.LightGroup;
-import com.devankav.spotifyhue.bridgeCommunication.LightUpdater;
-import com.devankav.spotifyhue.bridgeConnection.Bridge;
+import com.devankav.spotifyhue.bridgeCommunication.Bridge;
 import com.devankav.spotifyhue.credentials.SpotifyCredentials;
-import com.devankav.spotifyhue.listeners.LightsListener;
 import com.devankav.spotifyhue.observers.PaletteObserver;
 import com.devankav.spotifyhue.services.LightSync;
 import com.devankav.spotifyhue.spotifyHelpers.AlbumArtPalette;
@@ -34,6 +32,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import java.util.Set;
+
 public class MainActivity extends AppCompatActivity {
 
     //TODO: IMPLEMENT REMOTE ACCESS: SEE https://developers.meethue.com/develop/hue-api/remote-api-quick-start-guide/
@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private SpotifyAppRemote appRemote;
     private AlbumArtPalette albumArtPalette;
     private Bridge bridge;
-    private LightUpdater lightUpdater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        lightUpdater = new LightUpdater(ipAddress, id, username, this);
-        LightGroup lights = lightUpdater.getLights();
+        bridge = new Bridge(ipAddress, id, username, this);
+        LightGroup lights = bridge.getLightGroup();
 
         Button switchButton = findViewById(R.id.switchButton);
         switchButton.setOnClickListener(new View.OnClickListener() {
@@ -81,22 +80,23 @@ public class MainActivity extends AppCompatActivity {
         SeekBar.OnSeekBarChangeListener brightnessBarListener = new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (lights.hasResults()) {
-                    float percentage = ((float) i) / 100f;
-                    int brightness = (int) (254 * percentage);
+                float percentage = ((float) i) / 100f;
+                int brightness = (int) (254 * percentage);
 
-                    Log.d("MainActivity", brightness + "");
+                Log.d("MainActivity", brightness + "");
 
-                    for (Light light : lights.getLights()) {
-                        light.updateLightBrightness(brightness);
-                    }
+                for (Light light : lights.getLights()) {
+                    light.updateLightBrightness(brightness);
                 }
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         };
         brightnessBar.setOnSeekBarChangeListener(brightnessBarListener);
     }

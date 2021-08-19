@@ -18,9 +18,8 @@ import androidx.palette.graphics.Palette;
 
 import com.devankav.spotifyhue.bridgeCommunication.Light;
 import com.devankav.spotifyhue.bridgeCommunication.LightGroup;
-import com.devankav.spotifyhue.bridgeConnection.Bridge;
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
-import com.devankav.spotifyhue.bridgeCommunication.LightUpdater;
+import com.devankav.spotifyhue.bridgeCommunication.Bridge;
 import com.devankav.spotifyhue.credentials.SpotifyCredentials;
 import com.devankav.spotifyhue.listeners.LightsListener;
 import com.devankav.spotifyhue.observers.PaletteObserver;
@@ -34,13 +33,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class LightSync extends Service {
 
     private BridgeConnector connector;
     private SpotifyAppRemote appRemote;
     private AlbumArtPalette albumArtPalette;
-    private LightUpdater lightUpdater;
+    private Bridge bridge;
 
     /**
      * A callback for when there was a player event
@@ -67,9 +67,8 @@ public class LightSync extends Service {
         String id = bundle.getString("id");
         String username = bundle.getString("username");
 
-        Bridge bridge = new Bridge(ipAddress, id, username);
-        lightUpdater = new LightUpdater(ipAddress, id, username, this);
-        LightGroup lights = lightUpdater.getLights();
+        bridge = new Bridge(ipAddress, id, username, this);
+        LightGroup lights = bridge.getLightGroup();
 
         // Setup the connection parameters for the spotify remote
         ConnectionParams connectionParams = new ConnectionParams
@@ -90,7 +89,7 @@ public class LightSync extends Service {
                 LightsListener lightsListener = new LightsListener() {
                     @Override
                     public void finished(LightGroup result) {
-                        List<Light> lights = result.getLights();
+                        Set<Light> lights = result.getLights();
                     }
                 };
                 lights.registerListener(lightsListener);
@@ -99,12 +98,9 @@ public class LightSync extends Service {
                     @Override
                     public void notifyObserver(Palette updated) {
                         Log.d("LightSync", Arrays.toString(AlbumArtPalette.getXYColor(updated)));
-
-                        if (lights.hasResults()) {
                             for (Light light : lights.getLights()) {
                                 light.updateLightColor(AlbumArtPalette.getXYColor(updated));
                             }
-                        }
                     }
                 };
 
