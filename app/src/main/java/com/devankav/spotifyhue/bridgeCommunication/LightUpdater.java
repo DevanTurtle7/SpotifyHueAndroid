@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.devankav.spotifyhue.listeners.LightsListener;
 import com.devankav.spotifyhue.requests.GlobalRequestQueue;
 
 import org.json.JSONObject;
@@ -31,7 +32,9 @@ public class LightUpdater {
         this.queue = new GlobalRequestQueue(context); // Create a new instance of the request queue
     }
 
-    public void getLights() {
+    public LightGroup getLights() {
+        LightGroup results = new LightGroup();
+
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -50,6 +53,8 @@ public class LightUpdater {
         Log.d("LightUpdater", url);
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null, listener, errorListener);
         queue.getRequestQueue().add(jsonRequest); // Make the JSON call
+
+        return results;
     }
 
     public void updateLights() {
