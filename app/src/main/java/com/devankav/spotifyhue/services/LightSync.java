@@ -102,10 +102,7 @@ public class LightSync extends Service {
 
                         if (lights.hasResults()) {
                             for (Light light : lights.getLights()) {
-                                if (light.getType() == Light.LightType.EXTENDED_COLOR_LIGHT) {
-                                    Log.d("LightSync", light.getId());
-                                    lightUpdater.updateLightColor(light.getId(), AlbumArtPalette.getXYColor(updated));
-                                }
+                                light.updateLightColor(AlbumArtPalette.getXYColor(updated));
                             }
                         }
                     }

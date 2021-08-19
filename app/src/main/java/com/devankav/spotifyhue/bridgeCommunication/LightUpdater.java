@@ -9,6 +9,7 @@ import androidx.palette.graphics.Palette;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.devankav.spotifyhue.listeners.LightsListener;
 import com.devankav.spotifyhue.requests.GlobalRequestQueue;
@@ -52,8 +53,13 @@ public class LightUpdater {
         this.brightnessJobs = new HashSet<>();
     }
 
+    public String getLightsEndpoint() {
+        return this.lightsEndpoint;
+    }
+
     public LightGroup getLights() {
         LightGroup results = new LightGroup();
+        LightUpdater lightUpdater = this;
 
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
@@ -70,7 +76,7 @@ public class LightUpdater {
                         String type = body.getString("type");
                         Light.LightType lightType = Light.LightType.classifyType(type);
 
-                        Light light = new Light(id, name, lightType);
+                        Light light = new Light(id, name, lightType, lightUpdater);
                         lights.add(light);
                     } catch (JSONException e) {
                         Log.d("LightUpdater", "Something went wrong...");
@@ -114,63 +120,15 @@ public class LightUpdater {
         queue.getRequestQueue().add(jsonRequest); // Make the JSON call
     }
 
-    public void updateLightColor(String id, double[] xyColor) {
-        try {
-            String bodyString = "{\"xy\": " + Arrays.toString(xyColor) + "}";
-            JSONObject body = new JSONObject(bodyString);
-
-            updateLight(id, body);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public void addToQueue(JsonArrayBodyRequest jsonRequest) {
+        queue.getRequestQueue().add(jsonRequest);
     }
 
-    public void updateLightColor(String id, int color) {
-        double[] xyColor = AlbumArtPalette.rgbToXY(color);
-        updateLightColor(id, xyColor);
+    public void addToQueue(JsonObjectRequest jsonRequest) {
+        queue.getRequestQueue().add(jsonRequest);
     }
 
-    public void updateLightOn(String id, boolean on) {
-        try {
-            String bodyString = "{\"on\": " + on + "}";
-            JSONObject body = new JSONObject(bodyString);
-
-            updateLight(id, body);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void updateLightBrightness(String id, int brightness) {
-        if (!brightnessJobs.contains(id)) { // Check if this light is already being updated
-            try {
-                brightnessJobs.add(id); // Add it to the list of jobs
-                String bodyString = "{\"bri\": " + brightness + "}";
-                JSONObject body = new JSONObject(bodyString);
-
-                Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d("LightUpdater", response.toString());
-                        brightnessJobs.remove(id); // The job is finished. Remove the light from the list
-                    }
-                };
-
-                Response.ErrorListener errorListener = new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("LightUpdater", error.toString());
-                        brightnessJobs.remove(id); // The job is finished. Remove the light from the list
-                    }
-                };
-
-                String url = lightsEndpoint + "/" + id + "/state";
-                JsonArrayBodyRequest jsonRequest = new JsonArrayBodyRequest(Request.Method.PUT, url, body, listener, errorListener);
-                queue.getRequestQueue().add(jsonRequest); // Make the JSON call
-            } catch (JSONException e) {
-                e.printStackTrace();
-                brightnessJobs.remove(id); // The job is finished. Remove the light from the list
-            }
-        }
+    public void addToQueue(JsonArrayRequest jsonRequest) {
+        queue.getRequestQueue().add(jsonRequest);
     }
 }

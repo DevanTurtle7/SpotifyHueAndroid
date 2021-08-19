@@ -88,10 +88,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("MainActivity", brightness + "");
 
                     for (Light light : lights.getLights()) {
-                        if (light.getType() == Light.LightType.EXTENDED_COLOR_LIGHT) {
-                            String id = light.getId();
-                            lightUpdater.updateLightBrightness(id, brightness);
-                        }
+                        light.updateLightBrightness(brightness);
                     }
                 }
             }
