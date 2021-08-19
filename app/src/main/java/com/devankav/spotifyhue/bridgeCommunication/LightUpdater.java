@@ -113,7 +113,7 @@ public class LightUpdater {
         try {
             String bodyString = "{\"xy\": " + Arrays.toString(xyColor) + "}";
             JSONObject body = new JSONObject(bodyString);
-            
+
             updateLight(id, body);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -123,5 +123,27 @@ public class LightUpdater {
     public void updateLightColor(String id, int color) {
         double[] xyColor = AlbumArtPalette.rgbToXY(color);
         updateLightColor(id, xyColor);
+    }
+
+    public void updateLightOn(String id, boolean on) {
+        try {
+            String bodyString = "{\"on\": " + on + "}";
+            JSONObject body = new JSONObject(bodyString);
+
+            updateLight(id, body);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateLightBrightness(String id, int brightness) {
+        try {
+            String bodyString = "{\"bri\": " + brightness + "}";
+            JSONObject body = new JSONObject(bodyString);
+
+            updateLight(id, body);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
