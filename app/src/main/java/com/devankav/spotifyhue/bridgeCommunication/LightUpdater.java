@@ -1,4 +1,4 @@
-package com.devankav.spotifyhue.bridgeConnection;
+package com.devankav.spotifyhue.bridgeCommunication;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,6 +10,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.devankav.spotifyhue.requests.GlobalRequestQueue;
 
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class LightUpdater {
 

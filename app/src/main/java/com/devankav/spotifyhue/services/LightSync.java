@@ -8,21 +8,17 @@
 package com.devankav.spotifyhue.services;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.palette.graphics.Palette;
 
-import com.devankav.spotifyhue.R;
 import com.devankav.spotifyhue.bridgeConnection.Bridge;
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
-import com.devankav.spotifyhue.bridgeConnection.LightUpdater;
+import com.devankav.spotifyhue.bridgeCommunication.LightUpdater;
 import com.devankav.spotifyhue.credentials.SpotifyCredentials;
 import com.devankav.spotifyhue.observers.PaletteObserver;
 import com.devankav.spotifyhue.spotifyHelpers.AlbumArtPalette;
@@ -30,7 +26,6 @@ import com.devankav.spotifyhue.spotifyHelpers.StateParser;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
-import com.spotify.protocol.types.Album;
 import com.spotify.protocol.types.PlayerState;
 import com.squareup.picasso.Picasso;
 
