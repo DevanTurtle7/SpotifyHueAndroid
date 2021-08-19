@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private AlbumArtPalette albumArtPalette;
     private Bridge bridge;
 
+    private boolean isPaused = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -157,6 +159,35 @@ public class MainActivity extends AppCompatActivity {
         appRemote.getPlayerApi().subscribeToPlayerState().setEventCallback(this::playerStateUpdated); // Subscribe to the player state
         albumArtPalette = new AlbumArtPalette(); // Create a new album art palette
 
+        Button backButton = findViewById(R.id.backButton);
+        Button playButton = findViewById(R.id.playButton);
+        Button nextButton = findViewById(R.id.nextButton);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                appRemote.getPlayerApi().skipPrevious();
+            }
+        });
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isPaused) {
+                    appRemote.getPlayerApi().resume();
+                } else {
+                    appRemote.getPlayerApi().pause();
+                }
+            }
+        });
+
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                appRemote.getPlayerApi().skipNext();
+            }
+        });
+
         // Create a new palette observer
         PaletteObserver observer = new PaletteObserver() {
             @Override
@@ -214,6 +245,8 @@ public class MainActivity extends AppCompatActivity {
      * @param playerState The state of player
      */
     private void playerStateUpdated(PlayerState playerState) {
+        isPaused = playerState.isPaused;
+
         updateAlbumArt(playerState); // Update the album art
 
         String url = StateParser.getImageURL(playerState);
