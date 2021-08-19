@@ -36,6 +36,8 @@ import android.widget.SeekBar;
 
 public class MainActivity extends AppCompatActivity {
 
+    //TODO: IMPLEMENT REMOTE ACCESS: SEE https://developers.meethue.com/develop/hue-api/remote-api-quick-start-guide/
+
     private static final String CLIENT_ID = "d65cc0ee06034ea6aabec30bd2ec484d";
     private static final String REDIRECT_URI = "https://devanturtle7.github.io/SpotifyRedirect/";
 
