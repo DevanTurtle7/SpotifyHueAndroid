@@ -96,6 +96,15 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                int i = seekBar.getProgress();
+                float percentage = ((float) i) / 100f;
+                int brightness = (int) (254 * percentage);
+
+                Log.d("MainActivity", "forcing " + brightness + "");
+
+                for (Light light : lights.getLights()) {
+                    light.updateLightBrightness(brightness, true);
+                }
             }
         };
         brightnessBar.setOnSeekBarChangeListener(brightnessBarListener);

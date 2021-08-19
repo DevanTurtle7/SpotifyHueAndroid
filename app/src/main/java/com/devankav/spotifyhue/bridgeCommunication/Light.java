@@ -88,7 +88,11 @@ public class Light {
     }
 
     public void updateLightBrightness(int brightness) {
-        if (!updatingBrightness) { // Check if this light is already being updated
+        updateLightBrightness(brightness, false);
+    }
+
+    public void updateLightBrightness(int brightness, boolean force) {
+        if (!updatingBrightness || force) {
             try {
                 updatingBrightness = true;
                 String bodyString = "{\"bri\": " + brightness + "}";
