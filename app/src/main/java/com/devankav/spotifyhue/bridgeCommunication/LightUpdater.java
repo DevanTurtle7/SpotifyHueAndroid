@@ -142,9 +142,9 @@ public class LightUpdater {
     }
 
     public void updateLightBrightness(String id, int brightness) {
-        if (!brightnessJobs.contains(id)) {
+        if (!brightnessJobs.contains(id)) { // Check if this light is already being updated
             try {
-                brightnessJobs.add(id);
+                brightnessJobs.add(id); // Add it to the list of jobs
                 String bodyString = "{\"bri\": " + brightness + "}";
                 JSONObject body = new JSONObject(bodyString);
 
@@ -152,7 +152,7 @@ public class LightUpdater {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d("LightUpdater", response.toString());
-                        brightnessJobs.remove(id);
+                        brightnessJobs.remove(id); // The job is finished. Remove the light from the list
                     }
                 };
 
@@ -160,7 +160,7 @@ public class LightUpdater {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("LightUpdater", error.toString());
-                        brightnessJobs.remove(id);
+                        brightnessJobs.remove(id); // The job is finished. Remove the light from the list
                     }
                 };
 
@@ -169,7 +169,7 @@ public class LightUpdater {
                 queue.getRequestQueue().add(jsonRequest); // Make the JSON call
             } catch (JSONException e) {
                 e.printStackTrace();
-                brightnessJobs.remove(id);
+                brightnessJobs.remove(id); // The job is finished. Remove the light from the list
             }
         }
     }
