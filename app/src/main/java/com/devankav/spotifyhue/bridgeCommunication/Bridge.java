@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.devankav.spotifyhue.listeners.LightsListener;
 import com.devankav.spotifyhue.requests.GlobalRequestQueue;
 import com.devankav.spotifyhue.requests.JsonArrayBodyRequest;
 
@@ -87,6 +88,18 @@ public class Bridge {
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, lightsEndpoint, null, listener, errorListener);
         queue.getRequestQueue().add(jsonRequest); // Make the JSON call
+    }
+
+    /**
+     * Used to wait for the initial discovery of lights
+     * @param listener The listener that is waiting
+     */
+    public void subscribeToLightDiscovery(LightsListener listener) {
+        lights.registerListener(listener);
+
+        if (lights.hasResults()) {
+            listener.finished(lights);
+        }
     }
 
     public Set<Light> getLights() {
