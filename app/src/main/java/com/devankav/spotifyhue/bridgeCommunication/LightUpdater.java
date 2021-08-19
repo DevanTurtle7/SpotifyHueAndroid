@@ -13,6 +13,7 @@ import com.devankav.spotifyhue.requests.GlobalRequestQueue;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -40,20 +41,26 @@ public class LightUpdater {
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("LightUpdater", response.toString());
-
+                List<Light> lights = new ArrayList<>();
                 Iterator<String> keys = response.keys();
 
                 while(keys.hasNext()) {
-                    String key = keys.next();
+                    String id = keys.next();
 
                     try {
-                        if (response.get(key) instanceof JSONObject) {
-                            Log.d("LightUpdater", key);
-                        }
+                        JSONObject body = (JSONObject) response.getJSONObject(id);
+                        String name = body.getString("name");
+                        String type = body.getString("type");
+                        Light.LightType lightType = Light.LightType.classifyType(type);
+
+                        Light light = new Light(id, name, lightType);
+                        lights.add(light);
                     } catch (JSONException e) {
+                        Log.d("LightUpdater", "Something went wrong...");
                     }
                 }
+
+                results.updateLights(lights);
             }
         };
 

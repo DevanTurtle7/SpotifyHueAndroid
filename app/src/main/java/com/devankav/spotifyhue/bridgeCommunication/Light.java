@@ -1,15 +1,21 @@
 package com.devankav.spotifyhue.bridgeCommunication;
 
-import com.devankav.spotifyhue.listeners.DiscoveryListener;
-import com.devankav.spotifyhue.listeners.LightsListener;
-import com.devankav.spotifyhue.listeners.Listenable;
-
 public class Light {
 
-    public enum LightType {
+    public static enum LightType {
         EXTENDED_COLOR_LIGHT,
         COLOR_TEMPERATURE_LIGHT,
         OTHER;
+
+        public static LightType classifyType(String typeString) {
+            if (typeString.equals("Extended color light")) {
+                return EXTENDED_COLOR_LIGHT;
+            } else if (typeString.equals("Color temperature light")) {
+                return COLOR_TEMPERATURE_LIGHT;
+            } else {
+                return OTHER;
+            }
+        }
     }
 
     private String id;
@@ -32,5 +38,10 @@ public class Light {
 
     public LightType getType() {
         return type;
+    }
+
+    @Override
+    public String toString() {
+        return "Light " + id + ": name: " + name + ", type: " + type;
     }
 }

@@ -16,10 +16,12 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.palette.graphics.Palette;
 
+import com.devankav.spotifyhue.bridgeCommunication.LightGroup;
 import com.devankav.spotifyhue.bridgeConnection.Bridge;
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 import com.devankav.spotifyhue.bridgeCommunication.LightUpdater;
 import com.devankav.spotifyhue.credentials.SpotifyCredentials;
+import com.devankav.spotifyhue.listeners.LightsListener;
 import com.devankav.spotifyhue.observers.PaletteObserver;
 import com.devankav.spotifyhue.spotifyHelpers.AlbumArtPalette;
 import com.devankav.spotifyhue.spotifyHelpers.StateParser;
@@ -82,13 +84,21 @@ public class LightSync extends Service {
 
                 albumArtPalette = new AlbumArtPalette(); // Create a new album art palette
 
+                LightsListener lightsListener = new LightsListener() {
+                    @Override
+                    public void finished(LightGroup result) {
+                        Log.d("LightSync", result.getLights().toString());
+                    }
+                };
 
                 // Create a new palette observer
                 PaletteObserver observer = new PaletteObserver() {
                     @Override
                     public void notifyObserver(Palette updated) {
                         Log.d("LightSync", Arrays.toString(AlbumArtPalette.getXYColor(updated)));
-                        lightUpdater.getLights();
+
+                        LightGroup lights = lightUpdater.getLights();
+                        lights.registerListener(lightsListener);
                     }
                 };
 
