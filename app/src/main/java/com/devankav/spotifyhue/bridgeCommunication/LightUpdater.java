@@ -24,8 +24,11 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class LightUpdater {
 
@@ -37,6 +40,7 @@ public class LightUpdater {
 
     private final GlobalRequestQueue queue;
     private final String lightsEndpoint;
+    private Set<String> brightnessJobs;
 
     public LightUpdater(String ipAddress, String id, String username, Context context) {
         this.ipAddress = ipAddress;
@@ -45,6 +49,7 @@ public class LightUpdater {
 
         this.queue = new GlobalRequestQueue(context); // Create a new instance of the request queue
         this.lightsEndpoint = PREFIX + ipAddress + "/api/" + username + "/lights";
+        this.brightnessJobs = new HashSet<>();
     }
 
     public LightGroup getLights() {
@@ -137,13 +142,35 @@ public class LightUpdater {
     }
 
     public void updateLightBrightness(String id, int brightness) {
-        try {
-            String bodyString = "{\"bri\": " + brightness + "}";
-            JSONObject body = new JSONObject(bodyString);
+        if (!brightnessJobs.contains(id)) {
+            try {
+                brightnessJobs.add(id);
+                String bodyString = "{\"bri\": " + brightness + "}";
+                JSONObject body = new JSONObject(bodyString);
 
-            updateLight(id, body);
-        } catch (JSONException e) {
-            e.printStackTrace();
+                Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d("LightUpdater", response.toString());
+                        brightnessJobs.remove(id);
+                    }
+                };
+
+                Response.ErrorListener errorListener = new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("LightUpdater", error.toString());
+                        brightnessJobs.remove(id);
+                    }
+                };
+
+                String url = lightsEndpoint + "/" + id + "/state";
+                JsonArrayBodyRequest jsonRequest = new JsonArrayBodyRequest(Request.Method.PUT, url, body, listener, errorListener);
+                queue.getRequestQueue().add(jsonRequest); // Make the JSON call
+            } catch (JSONException e) {
+                e.printStackTrace();
+                brightnessJobs.remove(id);
+            }
         }
     }
 }
