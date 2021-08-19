@@ -16,6 +16,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.palette.graphics.Palette;
 
+import com.devankav.spotifyhue.bridgeCommunication.Light;
 import com.devankav.spotifyhue.bridgeCommunication.LightGroup;
 import com.devankav.spotifyhue.bridgeConnection.Bridge;
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
@@ -32,6 +33,7 @@ import com.spotify.protocol.types.PlayerState;
 import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class LightSync extends Service {
 
@@ -67,6 +69,7 @@ public class LightSync extends Service {
 
         Bridge bridge = new Bridge(ipAddress, id, username);
         lightUpdater = new LightUpdater(ipAddress, id, username, this);
+        LightGroup lights = lightUpdater.getLights();
 
         // Setup the connection parameters for the spotify remote
         ConnectionParams connectionParams = new ConnectionParams
@@ -87,22 +90,29 @@ public class LightSync extends Service {
                 LightsListener lightsListener = new LightsListener() {
                     @Override
                     public void finished(LightGroup result) {
-                        Log.d("LightSync", result.getLights().toString());
+                        List<Light> lights = result.getLights();
                     }
                 };
+                lights.registerListener(lightsListener);
 
-                // Create a new palette observer
                 PaletteObserver observer = new PaletteObserver() {
                     @Override
                     public void notifyObserver(Palette updated) {
                         Log.d("LightSync", Arrays.toString(AlbumArtPalette.getXYColor(updated)));
 
-                        LightGroup lights = lightUpdater.getLights();
-                        lights.registerListener(lightsListener);
+                        if (lights.hasResults()) {
+                            for (Light light : lights.getLights()) {
+                                if (light.getType() == Light.LightType.EXTENDED_COLOR_LIGHT) {
+                                    Log.d("LightSync", light.getId());
+                                    lightUpdater.updateLightColor(light.getId(), AlbumArtPalette.getXYColor(updated));
+                                }
+                            }
+                        }
                     }
                 };
 
                 albumArtPalette.registerObserver(observer); // Register the observer
+
             }
 
             @Override

@@ -45,10 +45,6 @@ public class LightGroup extends Listenable<LightsListener> {
     }
 
     public boolean hasResults() {
-        if (this.isFinished()) {
-            return !this.lights.isEmpty();
-        } else {
-            throw new ListenerNotFinishedException();
-        }
+        return !this.lights.isEmpty();
     }
 }

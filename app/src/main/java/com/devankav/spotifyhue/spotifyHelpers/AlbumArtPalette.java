@@ -55,7 +55,7 @@ public class AlbumArtPalette extends Observable<PaletteObserver> implements Targ
      * the XY color value
      *
      * @param palette The palette being searched
-     * @return The XY color value of the palette
+     * @return The XY color value of the palettea
      */
     public static double[] getXYColor(Palette palette) {
         int color = getColor(palette);
