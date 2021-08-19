@@ -6,6 +6,8 @@
 
 package com.devankav.spotifyhue.bridgeConnection;
 
+import android.util.Log;
+
 import com.devankav.spotifyhue.listeners.BridgeStateListener;
 import com.devankav.spotifyhue.listeners.DiscoveryListener;
 import com.devankav.spotifyhue.listeners.Listenable;
@@ -42,6 +44,8 @@ public class ReconnectResult extends Listenable<BridgeStateListener> {
      * @param bridgeState The new state of the bridge
      */
     public void setState(BridgeState bridgeState) {
+        Log.d("Reconnect", "Setting state to " + bridgeState);
+
         if (!this.isFinished()) {
             this.finish();
             this.bridgeState = bridgeState;

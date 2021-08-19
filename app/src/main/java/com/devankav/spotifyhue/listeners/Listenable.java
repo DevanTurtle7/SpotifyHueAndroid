@@ -7,6 +7,8 @@
 
 package com.devankav.spotifyhue.listeners;
 
+import android.util.Log;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,7 +42,7 @@ public abstract class Listenable<Listener> {
      * Sets this object as finished
      */
     protected void finish() {
-        if (this.isFinished()) {
+        if (!this.isFinished()) {
             this.finished = true;
         } else {
             throw new ListenerFinishedException("Attempted to finish a listener that is already finished.");
