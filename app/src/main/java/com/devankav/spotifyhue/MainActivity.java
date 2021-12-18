@@ -67,21 +67,24 @@ public class MainActivity extends AppCompatActivity {
         bridge = new Bridge(ipAddress, id, username, this);
         Set<Light> lights = bridge.getLights();
 
-        bridge.subscribeToLightDiscovery(new LightsListener() {
-            @Override
-            public void finished(LightGroup result) {
-                Log.d("MainActivityLIGHTS", lights.size() + "");
-                for (Light light : lights) {
-                    Log.d("MainActivityLIGHTS", light.toString());
-                }
-            }
-        });
-
         Button switchButton = findViewById(R.id.switchButton);
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, DiscoveryActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button lightsButton = findViewById(R.id.lightsButton);
+        lightsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, LightsActivity.class);
+                intent.putExtra("ipAddress", ipAddress);
+                intent.putExtra("id", id);
+                intent.putExtra("username", username);
+
                 startActivity(intent);
             }
         });
