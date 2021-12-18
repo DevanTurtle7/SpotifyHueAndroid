@@ -19,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.palette.graphics.Palette;
 
 import com.devankav.spotifyhue.bridgeCommunication.Bridge;
+import com.devankav.spotifyhue.bridgeCommunication.BridgeStorage;
 import com.devankav.spotifyhue.bridgeCommunication.Light;
 import com.devankav.spotifyhue.credentials.SpotifyCredentials;
 import com.devankav.spotifyhue.observers.PaletteObserver;
@@ -54,15 +55,14 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, LightSync.class);
 
-        intent.putExtra("ipAddress", ipAddress);
         intent.putExtra("id", id);
-        intent.putExtra("username", username);
 
         startService(intent); // Start the background service
 
         setContentView(R.layout.activity_main);
 
         bridge = new Bridge(ipAddress, id, username, this);
+        BridgeStorage.addBridge(id, bridge);
         Set<Light> lights = bridge.getLights();
 
         Button switchButton = findViewById(R.id.switchButton);
@@ -79,9 +79,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, LightsActivity.class);
-                intent.putExtra("ipAddress", ipAddress);
                 intent.putExtra("id", id);
-                intent.putExtra("username", username);
 
                 startActivity(intent);
             }

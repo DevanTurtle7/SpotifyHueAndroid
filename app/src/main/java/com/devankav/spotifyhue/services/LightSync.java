@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.palette.graphics.Palette;
 
 import com.devankav.spotifyhue.bridgeCommunication.Bridge;
+import com.devankav.spotifyhue.bridgeCommunication.BridgeStorage;
 import com.devankav.spotifyhue.bridgeCommunication.Light;
 import com.devankav.spotifyhue.bridgeCommunication.LightGroup;
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
@@ -62,11 +63,9 @@ public class LightSync extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle bundle = intent.getExtras();
-        String ipAddress = bundle.getString("ipAddress");
         String id = bundle.getString("id");
-        String username = bundle.getString("username");
 
-        bridge = new Bridge(ipAddress, id, username, this);
+        bridge = BridgeStorage.getBridge(id);
         Set<Light> lights = bridge.getLights();
 
         // Setup the connection parameters for the spotify remote
