@@ -7,9 +7,9 @@ import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 import com.devankav.spotifyhue.bridgeConnection.BridgeState;
 import com.devankav.spotifyhue.bridgeConnection.ConnectResult;
-import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 
 public class ConnectActivity extends Activity {
 

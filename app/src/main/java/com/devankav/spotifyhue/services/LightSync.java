@@ -16,12 +16,11 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.palette.graphics.Palette;
 
+import com.devankav.spotifyhue.bridgeCommunication.Bridge;
 import com.devankav.spotifyhue.bridgeCommunication.Light;
 import com.devankav.spotifyhue.bridgeCommunication.LightGroup;
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
-import com.devankav.spotifyhue.bridgeCommunication.Bridge;
 import com.devankav.spotifyhue.credentials.SpotifyCredentials;
-import com.devankav.spotifyhue.listeners.LightsListener;
 import com.devankav.spotifyhue.observers.PaletteObserver;
 import com.devankav.spotifyhue.spotifyHelpers.AlbumArtPalette;
 import com.devankav.spotifyhue.spotifyHelpers.StateParser;
@@ -32,7 +31,6 @@ import com.spotify.protocol.types.PlayerState;
 import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 public class LightSync extends Service {

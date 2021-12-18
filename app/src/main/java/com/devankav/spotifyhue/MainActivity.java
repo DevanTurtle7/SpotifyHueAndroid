@@ -4,25 +4,6 @@
 
 package com.devankav.spotifyhue;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.palette.graphics.Palette;
-
-import com.devankav.spotifyhue.bridgeCommunication.Light;
-import com.devankav.spotifyhue.bridgeCommunication.LightGroup;
-import com.devankav.spotifyhue.bridgeCommunication.Bridge;
-import com.devankav.spotifyhue.credentials.SpotifyCredentials;
-import com.devankav.spotifyhue.listeners.LightsListener;
-import com.devankav.spotifyhue.observers.PaletteObserver;
-import com.devankav.spotifyhue.services.LightSync;
-import com.devankav.spotifyhue.spotifyHelpers.AlbumArtPalette;
-import com.devankav.spotifyhue.spotifyHelpers.StateParser;
-import com.spotify.android.appremote.api.ConnectionParams;
-import com.spotify.android.appremote.api.Connector;
-import com.spotify.android.appremote.api.SpotifyAppRemote;
-import com.spotify.protocol.types.PlayerState;
-import com.squareup.picasso.Picasso;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,6 +13,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.palette.graphics.Palette;
+
+import com.devankav.spotifyhue.bridgeCommunication.Bridge;
+import com.devankav.spotifyhue.bridgeCommunication.Light;
+import com.devankav.spotifyhue.credentials.SpotifyCredentials;
+import com.devankav.spotifyhue.observers.PaletteObserver;
+import com.devankav.spotifyhue.services.LightSync;
+import com.devankav.spotifyhue.spotifyHelpers.AlbumArtPalette;
+import com.devankav.spotifyhue.spotifyHelpers.StateParser;
+import com.spotify.android.appremote.api.ConnectionParams;
+import com.spotify.android.appremote.api.Connector;
+import com.spotify.android.appremote.api.SpotifyAppRemote;
+import com.spotify.protocol.types.PlayerState;
+import com.squareup.picasso.Picasso;
 
 import java.util.Set;
 

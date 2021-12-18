@@ -1,16 +1,10 @@
 package com.devankav.spotifyhue.bridgeCommunication;
 
-import com.devankav.spotifyhue.bridgeConnection.BridgeResult;
-import com.devankav.spotifyhue.listeners.DiscoveryListener;
 import com.devankav.spotifyhue.listeners.LightsListener;
 import com.devankav.spotifyhue.listeners.Listenable;
 import com.devankav.spotifyhue.listeners.ListenerFinishedException;
-import com.devankav.spotifyhue.listeners.ListenerNotFinishedException;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 public class LightGroup extends Listenable<LightsListener> {

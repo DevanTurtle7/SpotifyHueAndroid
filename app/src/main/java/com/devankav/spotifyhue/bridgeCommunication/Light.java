@@ -5,7 +5,6 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.devankav.spotifyhue.bridgeConnection.BridgeState;
 import com.devankav.spotifyhue.requests.JsonArrayBodyRequest;
 import com.devankav.spotifyhue.spotifyHelpers.AlbumArtPalette;
 

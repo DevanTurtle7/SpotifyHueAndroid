@@ -1,9 +1,7 @@
 package com.devankav.spotifyhue;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
@@ -12,12 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.devankav.spotifyhue.adapters.LightAdapter;
 import com.devankav.spotifyhue.bridgeCommunication.Bridge;
 import com.devankav.spotifyhue.bridgeCommunication.Light;
-import com.devankav.spotifyhue.bridgeCommunication.LightGroup;
-import com.devankav.spotifyhue.listeners.LightsListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
 
 public class LightsActivity extends AppCompatActivity {
 

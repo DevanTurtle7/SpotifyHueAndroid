@@ -8,7 +8,6 @@
 package com.devankav.spotifyhue.bridgeConnection;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
 

@@ -9,12 +9,9 @@ package com.devankav.spotifyhue.bridgeConnection;
 import android.util.Log;
 
 import com.devankav.spotifyhue.listeners.BridgeStateListener;
-import com.devankav.spotifyhue.listeners.DiscoveryListener;
 import com.devankav.spotifyhue.listeners.Listenable;
 import com.devankav.spotifyhue.listeners.ListenerFinishedException;
 import com.devankav.spotifyhue.listeners.ListenerNotFinishedException;
-import com.devankav.spotifyhue.observers.BridgeStateObserver;
-import com.devankav.spotifyhue.observers.Observable;
 
 public class ReconnectResult extends Listenable<BridgeStateListener> {
 

@@ -7,8 +7,6 @@
 
 package com.devankav.spotifyhue.listeners;
 
-import android.util.Log;
-
 import java.util.HashSet;
 import java.util.Set;
 

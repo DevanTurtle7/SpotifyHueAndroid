@@ -18,8 +18,6 @@ import com.devankav.spotifyhue.observers.PaletteObserver;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import static android.view.View.X;
-
 public class AlbumArtPalette extends Observable<PaletteObserver> implements Target {
 
     /**

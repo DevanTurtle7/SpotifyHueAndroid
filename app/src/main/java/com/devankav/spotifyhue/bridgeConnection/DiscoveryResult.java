@@ -9,11 +9,8 @@ package com.devankav.spotifyhue.bridgeConnection;
 
 import com.devankav.spotifyhue.listeners.DiscoveryListener;
 import com.devankav.spotifyhue.listeners.Listenable;
-import com.devankav.spotifyhue.listeners.Listener;
 import com.devankav.spotifyhue.listeners.ListenerFinishedException;
 import com.devankav.spotifyhue.listeners.ListenerNotFinishedException;
-import com.devankav.spotifyhue.observers.DiscoveryObserver;
-import com.devankav.spotifyhue.observers.Observable;
 
 import java.util.HashSet;
 import java.util.Set;
