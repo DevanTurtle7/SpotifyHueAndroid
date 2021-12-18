@@ -22,6 +22,7 @@ import com.devankav.spotifyhue.bridgeCommunication.Light;
 import com.devankav.spotifyhue.bridgeCommunication.LightGroup;
 import com.devankav.spotifyhue.bridgeConnection.BridgeConnector;
 import com.devankav.spotifyhue.credentials.SpotifyCredentials;
+import com.devankav.spotifyhue.observers.LightActiveObserver;
 import com.devankav.spotifyhue.observers.PaletteObserver;
 import com.devankav.spotifyhue.spotifyHelpers.AlbumArtPalette;
 import com.devankav.spotifyhue.spotifyHelpers.StateParser;
@@ -67,6 +68,19 @@ public class LightSync extends Service {
 
         bridge = BridgeStorage.getBridge(id);
         Set<Light> lights = bridge.getLights();
+
+        // Changes a light to the current color after it becomes activated
+        bridge.subscribeToLightDiscovery(result -> { // Get all lights
+            for (Light light : result.getLights()) { // Iterate over the lights
+                // Add a new observer
+                light.registerObserver(active -> {
+                    if (active) { // Check if it is now active
+                        Palette palette = albumArtPalette.getPalette(); // Get the current palette
+                        light.updateLightColor(AlbumArtPalette.getXYColor(palette)); // Update the color
+                    }
+                });
+            }
+        });
 
         // Setup the connection parameters for the spotify remote
         ConnectionParams connectionParams = new ConnectionParams

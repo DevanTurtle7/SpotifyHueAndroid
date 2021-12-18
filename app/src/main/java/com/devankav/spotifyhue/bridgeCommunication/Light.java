@@ -5,6 +5,7 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.devankav.spotifyhue.observers.LightActiveObserver;
 import com.devankav.spotifyhue.requests.JsonArrayBodyRequest;
 import com.devankav.spotifyhue.spotifyHelpers.AlbumArtPalette;
 
@@ -13,6 +14,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Observer;
 
 public class Light {
 
@@ -39,6 +42,8 @@ public class Light {
     private Bridge bridge;
     private boolean isActive;
 
+    private HashSet<LightActiveObserver> observers;
+
     public Light(String id, String name, LightType type, Bridge bridge, boolean isActive) {
         this.id = id;
         this.name = name;
@@ -46,6 +51,8 @@ public class Light {
         this.updatingBrightness = false;
         this.bridge = bridge;
         this.isActive = isActive;
+
+        this.observers = new HashSet<>();
     }
 
     public Light(String id, String name, LightType type, Bridge bridge) {
@@ -73,8 +80,8 @@ public class Light {
     }
 
     public void setActive(boolean isActive) {
-        Log.d("Light", "Changing active to " + isActive);
         this.isActive = isActive;
+        this.activeChanged();
     }
 
     public void updateLightColor(double[] xyColor) {
@@ -153,6 +160,16 @@ public class Light {
                     updatingBrightness = false; // The job is finished. Mark updating as false
                 }
             }
+        }
+    }
+
+    public void registerObserver(LightActiveObserver observer) {
+        this.observers.add(observer);
+    }
+
+    private void activeChanged() {
+        for (LightActiveObserver observer : this.observers) {
+            observer.notifyObserver(this.isActive);
         }
     }
 

@@ -20,10 +20,13 @@ import com.squareup.picasso.Target;
 
 public class AlbumArtPalette extends Observable<PaletteObserver> implements Target {
 
+    private Palette current;
+
     /**
      * The constructor
      */
     public AlbumArtPalette() {
+        this.current = null;
     }
 
     /**
@@ -107,11 +110,10 @@ public class AlbumArtPalette extends Observable<PaletteObserver> implements Targ
 
     /**
      * Notifies all of the registered observers that an update has occurred
-     * @param palette The palette being updated
      */
-    public void notifyObservers(Palette palette) {
+    public void notifyObservers() {
         for (PaletteObserver observer : observers) { // Iterate over each observer
-            observer.notifyObserver(palette); // Notify the observer
+            observer.notifyObserver(current); // Notify the observer
         }
     }
 
@@ -120,7 +122,8 @@ public class AlbumArtPalette extends Observable<PaletteObserver> implements Targ
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(@Nullable Palette palette) {
-                notifyObservers(palette);
+                current = palette;
+                notifyObservers();
             }
         });
     }
@@ -133,5 +136,9 @@ public class AlbumArtPalette extends Observable<PaletteObserver> implements Targ
     @Override
     public void onPrepareLoad(Drawable placeHolderDrawable) {
 
+    }
+
+    public Palette getPalette() {
+        return this.current;
     }
 }
