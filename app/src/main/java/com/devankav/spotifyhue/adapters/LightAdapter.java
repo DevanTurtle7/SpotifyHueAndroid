@@ -26,10 +26,6 @@ public class LightAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public ArrayList<Light> getList() {
-        return this.lights;
-    }
-
     @Override
     public int getCount() {
         return lights.size();
@@ -47,9 +43,8 @@ public class LightAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Light light = lights.get(position);
+        Light light = getItem(position);
         View currentView = convertView;
-        //light.setActive(false);
 
         if (currentView == null) {
             currentView = inflater.inflate(R.layout.list_item_lights, parent, false);
