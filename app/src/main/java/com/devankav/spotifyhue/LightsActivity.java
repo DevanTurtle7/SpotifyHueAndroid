@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.devankav.spotifyhue.adapters.LightAdapter;
 import com.devankav.spotifyhue.bridgeCommunication.Bridge;
 import com.devankav.spotifyhue.bridgeCommunication.Light;
 import com.devankav.spotifyhue.bridgeCommunication.LightGroup;
@@ -33,7 +35,9 @@ public class LightsActivity extends AppCompatActivity {
         bridge = new Bridge(ipAddress, id, username, this);
 
         ArrayList<Light> lights = new ArrayList<>();
-        ArrayAdapter<Light> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, lights);
+        LightAdapter adapter = new LightAdapter(lights, this);
+        ListView lightsList = findViewById(R.id.lightsList);
+        lightsList.setAdapter(adapter);
 
         bridge.subscribeToLightDiscovery(result -> {
             Log.d("LightsActivity", result.getLights().size() + "");
