@@ -12,6 +12,7 @@ import com.devankav.spotifyhue.bridgeCommunication.Light;
 import com.devankav.spotifyhue.bridgeCommunication.LightGroup;
 import com.devankav.spotifyhue.bridgeCommunication.Bridge;
 import com.devankav.spotifyhue.credentials.SpotifyCredentials;
+import com.devankav.spotifyhue.listeners.LightsListener;
 import com.devankav.spotifyhue.observers.PaletteObserver;
 import com.devankav.spotifyhue.services.LightSync;
 import com.devankav.spotifyhue.spotifyHelpers.AlbumArtPalette;
@@ -68,6 +69,16 @@ public class MainActivity extends AppCompatActivity {
 
         bridge = new Bridge(ipAddress, id, username, this);
         Set<Light> lights = bridge.getLights();
+
+        bridge.subscribeToLightDiscovery(new LightsListener() {
+            @Override
+            public void finished(LightGroup result) {
+                Log.d("MainActivityLIGHTS", lights.size() + "");
+                for (Light light : lights) {
+                    Log.d("MainActivityLIGHTS", light.toString());
+                }
+            }
+        });
 
         Button switchButton = findViewById(R.id.switchButton);
         switchButton.setOnClickListener(new View.OnClickListener() {
