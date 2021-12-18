@@ -9,5 +9,7 @@ Jump to the source code [here](/app/src/main/java/com/devankav/spotifyhue)
 
 ## Credit
 [picasso](https://github.com/square/picasso): Generating palettes from images.
+
 [Spotify Android SDK](https://developer.spotify.com/documentation/android/): Connecting to spotify, getting album covers, the current song, and song info.
+
 [Philips Hue API](https://developers.meethue.com): Connecting to Philips Hue lights
