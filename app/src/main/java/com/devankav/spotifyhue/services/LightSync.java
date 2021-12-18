@@ -41,6 +41,7 @@ public class LightSync extends Service {
     private SpotifyAppRemote appRemote;
     private AlbumArtPalette albumArtPalette;
     private Bridge bridge;
+    private LightGroup lightGroup;
 
     /**
      * A callback for when there was a player event
