@@ -34,8 +34,12 @@ public class LightsActivity extends AppCompatActivity {
         lightsList.setAdapter(adapter);
 
         bridge.subscribeToLightDiscovery(result -> {
-            Log.d("LightsActivity", result.getLights().size() + "");
-            lights.addAll(result.getLights());
+            for (Light light : bridge.getLights()) {
+                if (light.getType() == Light.LightType.EXTENDED_COLOR_LIGHT) {
+                    lights.add(light);
+                }
+            }
+
             adapter.notifyDataSetChanged();
         });
     }

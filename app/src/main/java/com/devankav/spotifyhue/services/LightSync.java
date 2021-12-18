@@ -85,14 +85,10 @@ public class LightSync extends Service {
 
                 albumArtPalette = new AlbumArtPalette(); // Create a new album art palette
 
-                PaletteObserver observer = new PaletteObserver() {
-                    @Override
-                    public void notifyObserver(Palette updated) {
-                        Log.d("LightSync", Arrays.toString(AlbumArtPalette.getXYColor(updated)));
-                            for (Light light : lights) {
-                                light.updateLightColor(AlbumArtPalette.getXYColor(updated));
-                            }
-                    }
+                PaletteObserver observer = updated -> {
+                        for (Light light : lights) {
+                            light.updateLightColor(AlbumArtPalette.getXYColor(updated));
+                        }
                 };
 
                 albumArtPalette.registerObserver(observer); // Register the observer

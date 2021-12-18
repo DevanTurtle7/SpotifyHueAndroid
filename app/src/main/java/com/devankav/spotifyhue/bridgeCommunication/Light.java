@@ -68,7 +68,12 @@ public class Light {
         return isActive;
     }
 
+    public Bridge getBridge() {
+        return this.bridge;
+    }
+
     public void setActive(boolean isActive) {
+        Log.d("Light", "Changing active to " + isActive);
         this.isActive = isActive;
     }
 
@@ -84,6 +89,8 @@ public class Light {
                     e.printStackTrace();
                 }
             }
+        } else {
+            Log.d("Light", "Cannot change color, inactive");
         }
     }
 
